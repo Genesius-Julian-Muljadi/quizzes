@@ -1,0 +1,49 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // provider  = "postgresql"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+model Users {
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(30)
+  email       String   @unique
+  password    String
+  dateCreated DateTime @default(now())
+  updated     DateTime @updatedAt
+}
+
+model Quizzes {
+  id     Int        @id @default(autoincrement())
+  title  String     @db.VarChar(30)
+  qCount Int
+  qnas   Quiz_QnA[]
+}
+
+model Quiz_QnA {
+  id       Int            @id @default(autoincrement())
+  quizID   Int
+  quiz     Quizzes        @relation(fields: [quizID], references: [id])
+  question String
+  multiple Boolean        @default(false) // true if multiple answers allowed/required
+  answers  Quiz_Answers[]
+}
+
+model Quiz_Answers {
+  id      Int      @id @default(autoincrement())
+  qnaID   Int
+  qna     Quiz_QnA @relation(fields: [qnaID], references: [id])
+  answer  String   @db.VarChar(50)
+  correct Boolean
+}
