@@ -5,8 +5,8 @@ import { quizValidator } from "./custom_validators";
 export default class QuizValidations {
   public registerValidationUser = [
     body("quiz")
-      .isArray()
-      .custom(quizValidator),
+      .custom(quizValidator)
+      .withMessage("Quiz contains either no questions or a question contains no correct answers."),
     (req: Request, res: Response, next: NextFunction) => {
       try {
         const errors = validationResult(req);

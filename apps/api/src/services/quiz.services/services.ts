@@ -10,24 +10,42 @@ export default class QuizServices {
 
       let newQuiz: Quiz;
       await prisma.$transaction(async (prisma) => {
-        newQuiz = await QuizUtils.generateQuiz(prisma, quiz);
-
-        const qnas: QnA[] = quiz.qnas;
-        for (let i = 0; i < qnas.length; i++) {
-          const newQnA: QnA = await QuizUtils.generateQnA(
-            prisma,
-            qnas[i],
-            newQuiz.id
-          );
-
-          const answers: Answer[] = qnas[i].answers;
-          for (let j = 0; j < answers.length; j++) {
-            await QuizUtils.generateAnswer(prisma, answers[j], newQnA.id);
-          }
-        }
+        newQuiz = await QuizUtils.generateEntireQuiz(prisma, quiz);
       });
 
       return newQuiz!;
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async editQuiz(req: Request, next: NextFunction) {
+    try {
+      const newQuiz = req.body.quiz as Quiz; // Quiz should contain current quizID
+      await QuizUtils.validateFindQuizID(newQuiz.id);
+
+      await prisma.$transaction(async (prisma) => {
+        await QuizUtils.deleteQuiz(prisma, newQuiz.id!);
+        await QuizUtils.generateEntireQuiz(prisma, newQuiz);
+      });
+
+      return newQuiz;
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async removeQuiz(req: Request, next: NextFunction) {
+    try {
+      const oldQuizID = req.body.id as string;
+      await QuizUtils.validateFindQuizID(parseInt(oldQuizID));
+
+      let oldQuiz;
+      await prisma.$transaction(async (prisma) => {
+        oldQuiz = await QuizUtils.deleteQuiz(prisma, parseInt(oldQuizID));
+      });
+
+      return oldQuiz;
     } catch (err) {
       next(err);
     }

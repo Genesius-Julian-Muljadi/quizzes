@@ -1,18 +1,19 @@
 export interface Answer {
-  id: number;
+  id?: number;
   answer: string;
   correct: boolean;
 }
 
 export interface QnA {
-  id: number;
+  id?: number;
+  quizID?: number;
   question: string;
   multiple: boolean;
   answers: Answer[];
 }
 
 export default interface Quiz {
-  id: number;
+  id?: number;
   title: string;
   qnas: QnA[];
 }

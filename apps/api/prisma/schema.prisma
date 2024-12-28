@@ -34,7 +34,7 @@ model Quizzes {
 model Quiz_QnA {
   id       Int            @id @default(autoincrement())
   quizID   Int
-  quiz     Quizzes        @relation(fields: [quizID], references: [id])
+  quiz     Quizzes        @relation(fields: [quizID], references: [id], onDelete: Cascade)
   question String
   multiple Boolean        @default(false) // true if multiple answers allowed/required
   answers  Quiz_Answers[]
@@ -43,7 +43,7 @@ model Quiz_QnA {
 model Quiz_Answers {
   id      Int      @id @default(autoincrement())
   qnaID   Int
-  qna     Quiz_QnA @relation(fields: [qnaID], references: [id])
+  qna     Quiz_QnA @relation(fields: [qnaID], references: [id], onDelete: Cascade)
   answer  String   @db.VarChar(50)
   correct Boolean
 }
