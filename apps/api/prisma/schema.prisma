@@ -16,19 +16,24 @@ datasource db {
 }
 
 model Users {
-  id          Int      @id @default(autoincrement())
-  name        String   @db.VarChar(30)
-  email       String   @unique
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(30)
+  email       String    @unique
   password    String
-  dateCreated DateTime @default(now())
-  updated     DateTime @updatedAt
+  quizzes     Quizzes[]
+  dateCreated DateTime  @default(now())
+  updated     DateTime  @updatedAt
 }
 
 model Quizzes {
-  id     Int        @id @default(autoincrement())
-  title  String     @db.VarChar(30)
-  qCount Int
-  qnas   Quiz_QnA[]
+  id          Int        @id @default(autoincrement())
+  userID      Int
+  user        Users      @relation(fields: [userID], references: [id], onDelete: Cascade)
+  title       String     @db.VarChar(30)
+  qCount      Int
+  qnas        Quiz_QnA[]
+  dateCreated DateTime   @default(now())
+  updated     DateTime   @updatedAt
 }
 
 model Quiz_QnA {

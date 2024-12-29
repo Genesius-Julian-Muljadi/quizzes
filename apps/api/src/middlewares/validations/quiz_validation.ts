@@ -3,7 +3,7 @@ import { body, validationResult } from "express-validator";
 import { quizValidator } from "./custom_validators";
 
 export default class QuizValidations {
-  public registerValidationUser = [
+  public quizValidation = [
     body("quiz")
       .custom(quizValidator)
       .withMessage("Quiz contains either no questions or a question contains no correct answers."),
@@ -11,6 +11,7 @@ export default class QuizValidations {
       try {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
+          console.log(req.body.quiz);
           throw new Error(errors.array()[0].msg);
         }
         next();

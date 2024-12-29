@@ -4,6 +4,7 @@ import { PORT } from "./config";
 import helmet from "helmet";
 import AuthRoutes from "./routes/auth.routes";
 import QuizRoutes from "./routes/quiz.routes";
+import DataRoutes from "./routes/data.routes";
 
 export default class Server {
   private app: Application;
@@ -25,6 +26,7 @@ export default class Server {
   private routes() {
     this.app.use("/auth", new AuthRoutes().getRoutes());
     this.app.use("/quiz", new QuizRoutes().getRoutes());
+    this.app.use("/data", new DataRoutes().getRoutes());
   }
 
   public start() {

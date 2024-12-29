@@ -1,10 +1,10 @@
 import { Router } from "express";
-import QuizControllers from "../controllers/quiz.controllers";
+import DataControllers from "../controllers/data.controllers";
 import QuizValidations from "../middlewares/validations/quiz_validation";
 
-export default class QuizRoutes {
+export default class DataRoutes {
   private router;
-  private controllers = new QuizControllers();
+  private controllers = new DataControllers();
   private validations = new QuizValidations();
 
   constructor() {
@@ -13,11 +13,14 @@ export default class QuizRoutes {
   }
 
   private routes() {
-    this.router.get(
-      "/create/:id",
+    this.router.post("/users", this.controllers.populateUser);
+    this.router.get("/users", this.controllers.getAllUsers);
+    this.router.post(
+      "/quiz",
       this.validations.quizValidation,
       this.controllers.createQuiz
     );
+    this.router.delete("", this.controllers.deleteAll);
   }
 
   public getRoutes() {
