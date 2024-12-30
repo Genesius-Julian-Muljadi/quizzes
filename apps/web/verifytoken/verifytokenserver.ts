@@ -5,11 +5,8 @@ import { cookies } from 'next/headers'
 
 export default async function VerifyTokenServer(): Promise<AccessTokenUser | null> {
   try {
-    console.log('here1')
     const cookieStore = await cookies()
-    console.log('here3')
     const token = cookieStore.get('access_token_session')?.value
-    console.log('here2')
 
     let decodedToken: AccessTokenUser | null = null
     if (token) {
@@ -31,7 +28,7 @@ export default async function VerifyTokenServer(): Promise<AccessTokenUser | nul
 
     return decodedToken
   } catch (err) {
-    console.log('something went wrong in middleware')
+    console.log('something went wrong in verifytokenserver')
     console.log('myerror: ' + err)
     throw err
   }
