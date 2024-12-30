@@ -17,9 +17,11 @@ class AuthControllers {
     registerUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield services_1.default.registerUser(req, next);
+                const user = yield services_1.default.registerUser(req, res, next);
+                if (!user)
+                    throw new Error("Register failed");
                 res.status(200).send({
-                    message: "OK",
+                    message: "Registration successful!",
                     data: user,
                 });
             }
@@ -31,7 +33,9 @@ class AuthControllers {
     loginUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const authToken = yield services_1.default.loginUser(req, next);
+                const authToken = yield services_1.default.loginUser(req, res, next);
+                if (!authToken)
+                    throw new Error("Login failed");
                 res
                     .status(200)
                     .cookie("access_token", authToken, {

@@ -13,12 +13,12 @@ export default class AuthRoutes {
   }
 
   private routes() {
-    this.router.get(
+    this.router.post(
       "/register",
       this.validations.registerValidationUser,
       this.controllers.registerUser
     );
-    this.router.get(
+    this.router.post(
       "/login",
       this.validations.loginValidationUser,
       this.controllers.loginUser

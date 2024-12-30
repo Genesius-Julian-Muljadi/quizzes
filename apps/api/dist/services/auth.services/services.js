@@ -17,7 +17,7 @@ const jsonwebtoken_1 = require("jsonwebtoken");
 const config_1 = require("../../config");
 const utils_1 = __importDefault(require("./utils"));
 class AuthServices {
-    static registerUser(req, next) {
+    static registerUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { name, email, password } = req.body;
@@ -26,7 +26,7 @@ class AuthServices {
                     throw new Error("Duplicate email");
                 }
                 const hashedPassword = yield utils_1.default.bcryptHash(password);
-                const newUser = yield prisma_1.default.user.create({
+                const newUser = yield prisma_1.default.users.create({
                     data: {
                         name: name,
                         email: email,
@@ -37,15 +37,18 @@ class AuthServices {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }
-    static loginUser(req, next) {
+    static loginUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, password } = req.body;
                 const findUser = yield utils_1.default.findUserByEmail(email);
-                utils_1.default.verifyCredentials(findUser, password);
+                utils_1.default.verifyCredentials(findUser, password, res, next);
                 const payload = {
                     id: findUser.id,
                     email: email,
@@ -56,6 +59,9 @@ class AuthServices {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }

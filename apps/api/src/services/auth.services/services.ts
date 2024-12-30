@@ -1,11 +1,11 @@
-import { NextFunction, Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import prisma from "../../lib/prisma";
 import { sign } from "jsonwebtoken";
 import { SECRET_KEY } from "../../config";
 import AuthUtils from "./utils";
 
 export default class AuthServices {
-  static async registerUser(req: Request, next: NextFunction) {
+  static async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { name, email, password } = req.body;
 
@@ -27,15 +27,18 @@ export default class AuthServices {
       return newUser;
     } catch (err) {
       next(err);
+      res.status(401).send({
+        message: String(err)
+      })
     }
   }
 
-  static async loginUser(req: Request, next: NextFunction) {
+  static async loginUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
       const findUser = await AuthUtils.findUserByEmail(email);
 
-      AuthUtils.verifyCredentials(findUser, password);
+      AuthUtils.verifyCredentials(findUser, password, res, next);
 
       const payload = {
         id: findUser!.id,
@@ -47,6 +50,9 @@ export default class AuthServices {
       return token;
     } catch (err) {
       next(err);
+      res.status(401).send({
+        message: String(err)
+      })
     }
   }
 }

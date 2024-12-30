@@ -4,7 +4,8 @@ import AuthServices from "../services/auth.services/services";
 export default class AuthControllers {
   public async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const user = await AuthServices.registerUser(req, next);
+      const user = await AuthServices.registerUser(req, res, next);
+      if (!user) throw new Error("Register failed");
 
       res.status(200).send({
         message: "Registration successful!",
@@ -17,7 +18,8 @@ export default class AuthControllers {
 
   public async loginUser(req: Request, res: Response, next: NextFunction) {
     try {
-      const authToken = await AuthServices.loginUser(req, next);
+      const authToken = await AuthServices.loginUser(req, res, next);
+      if (!authToken) throw new Error("Login failed");
 
       res
         .status(200)

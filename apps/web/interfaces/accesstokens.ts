@@ -1,8 +1,7 @@
 interface AccessTokenUser {
     id: number;
-    email: string;
     name: string;
-    role: string;
+    email: string;
     iat: number;
     exp: number;
 };

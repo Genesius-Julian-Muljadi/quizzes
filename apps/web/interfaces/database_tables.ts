@@ -1,16 +1,9 @@
 interface User {
   id: number
-  firstName: string
-  lastName: string
+  name: string
   email: string
   password: string
-  pointBalance: number
-  referralCode: string
-  failedLogins: number
-  active: string
-  emailVerified: boolean
-  dateCreated: Date
-  updated: Date
+  dateCreated?: Date
 }
 
 interface Answer {

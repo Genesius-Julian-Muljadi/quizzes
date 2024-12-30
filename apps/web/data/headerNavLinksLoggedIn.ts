@@ -1,4 +1,4 @@
-const headerNavLinks = [
+const headerNavLinksLoggedIn = [
   { href: '/', title: 'Home' },
   { href: '/quiz', title: 'Take a Quiz' },
   { href: '/completed', title: 'Completed Quizzes' },
@@ -6,4 +6,4 @@ const headerNavLinks = [
   { href: '/logout', title: 'Log Out' },
 ]
 
-export default headerNavLinks
+export default headerNavLinksLoggedIn

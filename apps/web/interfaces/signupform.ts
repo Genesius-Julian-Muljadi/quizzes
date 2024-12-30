@@ -1,11 +1,9 @@
-interface IUser {
-    firstName: string;
-    lastName: string;
+interface SignupUser {
+    name: string;
     email: string;
     password: string;
-    referralCode: string;
 };
 
 export type {
-    IUser,
+    SignupUser,
 };

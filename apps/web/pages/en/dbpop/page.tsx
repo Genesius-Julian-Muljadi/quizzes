@@ -14,11 +14,11 @@ export default function DatabasePopulationPage() {
         <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl sm:leading-10 md:text-6xl md:leading-14">
           Database Population
         </h1>
-          <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-            These buttons are used to populate the database with random data.
-          </p>
+        <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
+          These buttons are used to populate the database with random data.
+        </p>
       </div>
-      <div className="pb-8 pt-6 flex flex-col gap-4 *:mx-auto">
+      <div className="flex flex-col gap-4 pb-8 pt-6 *:mx-auto">
         <button
           onClick={() => AddUsers(addUserCount)}
           className="rounded border border-black px-2 py-1 dark:border-white"

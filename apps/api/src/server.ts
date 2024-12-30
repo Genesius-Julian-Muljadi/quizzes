@@ -18,7 +18,12 @@ export default class Server {
   }
 
   private middlewares() {
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: true,
+        credentials: true,
+      })
+    );
     this.app.use(helmet());
     this.app.use(express.json());
   }

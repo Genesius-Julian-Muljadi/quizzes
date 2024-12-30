@@ -66,7 +66,7 @@ function assembleQnA(words: string[]): QnA {
     answers.push(answer)
   }
 
-  const correctCount = validateAnswers(answers);
+  const correctCount = validateAnswers(answers)
 
   return {
     question: question,
@@ -96,8 +96,8 @@ function assembleQuiz(words: string[], user: User): Quiz {
   }
 
   const creationDate: Date = new Date(
-    new Date(user.dateCreated).valueOf() +
-      Math.ceil(Math.random() * (new Date().valueOf() - new Date(user.dateCreated).valueOf()))
+    new Date(user.dateCreated!).valueOf() +
+      Math.ceil(Math.random() * (new Date().valueOf() - new Date(user.dateCreated!).valueOf()))
   )
 
   return {
@@ -111,6 +111,7 @@ function assembleQuiz(words: string[], user: User): Quiz {
 
 export async function AddQuizzes(n?: number) {
   const userRaw = await axios.get(process.env.NEXT_PUBLIC_BASE_API_URL + '/data/users')
+  if (!userRaw) throw Error()
   const users: User[] = userRaw.data.data
 
   const wordChoices: string[] = capitalizeString(words).split('\n')

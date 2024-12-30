@@ -18,7 +18,7 @@ class AuthUtils {
     static findUserByEmail(email) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield prisma_1.default.user.findUnique({
+                const user = yield prisma_1.default.users.findUnique({
                     where: {
                         email: email,
                     },
@@ -42,7 +42,7 @@ class AuthUtils {
             }
         });
     }
-    static verifyCredentials(user, password) {
+    static verifyCredentials(user, password, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!user)
@@ -52,7 +52,10 @@ class AuthUtils {
                     throw new Error("Invalid credentials");
             }
             catch (err) {
-                throw err;
+                next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }

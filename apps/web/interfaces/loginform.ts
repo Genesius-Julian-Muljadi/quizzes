@@ -1,8 +1,8 @@
-interface IUser {
+interface LoginUser {
     email: string;
     password: string;
 };
 
 export type {
-    IUser,
+    LoginUser,
 };
