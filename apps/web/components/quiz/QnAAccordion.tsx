@@ -21,7 +21,7 @@ export default function QnAAccordion(
       >
         <div className="flex flex-col gap-1">
           <p className="font-medium">{`${qNumber}. ${qna.question}`}</p>
-          <p className={`${qna.multiple ? '' : 'hidden '}font-light text-sm italic pl-2`}>
+          <p className={`${qna.multiple ? '' : 'hidden '}font-light pl-2 text-sm italic`}>
             Select all correct answers
           </p>
         </div>

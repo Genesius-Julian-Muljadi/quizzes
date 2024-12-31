@@ -28,10 +28,7 @@ export default class DataServices {
 
       return newUser;
     } catch (err) {
-      next(err);
-      res.status(401).send({
-        message: String(err)
-      })
+      throw err;
     }
   }
 
@@ -41,10 +38,7 @@ export default class DataServices {
 
       return allUsers;
     } catch (err) {
-      next(err);
-      res.status(401).send({
-        message: String(err)
-      })
+      throw err;
     }
   }
 
@@ -59,10 +53,7 @@ export default class DataServices {
 
       return newQuiz!;
     } catch (err) {
-      next(err);
-      res.status(401).send({
-        message: String(err)
-      })
+      throw err;
     }
   }
 
@@ -72,10 +63,7 @@ export default class DataServices {
         await DataUtils.deleteAll(prisma);
       })
     } catch (err) {
-      next(err);
-      res.status(401).send({
-        message: String(err)
-      })
+      throw err;
     }
   }
 }

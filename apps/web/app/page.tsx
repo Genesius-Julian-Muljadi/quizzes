@@ -15,10 +15,6 @@ export default async function Page() {
     return <MainEn quizzes={quizzes} />
   } catch (err) {
     console.log(err)
-    return (
-      <div className="align-middle text-center text-lg">
-        Something went wrong!
-      </div>
-    )
+    return <div className="text-center align-middle text-lg">Something went wrong!</div>
   }
 }

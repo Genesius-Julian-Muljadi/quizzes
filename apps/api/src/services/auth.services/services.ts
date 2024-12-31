@@ -26,10 +26,7 @@ export default class AuthServices {
 
       return newUser;
     } catch (err) {
-      next(err);
-      res.status(401).send({
-        message: String(err)
-      })
+      throw err;
     }
   }
 
@@ -49,10 +46,7 @@ export default class AuthServices {
 
       return token;
     } catch (err) {
-      next(err);
-      res.status(401).send({
-        message: String(err)
-      })
+      throw err;
     }
   }
 }

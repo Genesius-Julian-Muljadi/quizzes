@@ -20,7 +20,7 @@ export default class QuizServices {
 
       return newQuiz!;
     } catch (err) {
-      next(err);
+      throw err;
     }
   }
 
@@ -36,7 +36,7 @@ export default class QuizServices {
 
       return newQuiz;
     } catch (err) {
-      next(err);
+      throw err;
     }
   }
 
@@ -52,7 +52,7 @@ export default class QuizServices {
 
       return oldQuiz;
     } catch (err) {
-      next(err);
+      throw err;
     }
   }
 
@@ -67,7 +67,7 @@ export default class QuizServices {
 
       return quiz;
     } catch (err) {
-      next(err);
+      throw err;
     }
   }
 
@@ -77,7 +77,7 @@ export default class QuizServices {
 
       return quizzes;
     } catch (err) {
-      next(err);
+      throw err;
     }
   }
 }
