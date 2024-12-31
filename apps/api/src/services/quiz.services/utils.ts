@@ -2,13 +2,14 @@ import Quiz, { Answer, QnA } from "../../interfaces/quiz";
 import prisma from "../../lib/prisma";
 
 export default class QuizUtils {
-  static async generateQuiz(client: any, quiz: Quiz) {
+  static async generateQuiz(client: any, quiz: Quiz, userID: number) {
     try {
       const newQuiz = client.quizzes.create({
         data: {
           id: quiz.id ? quiz.id : undefined,
+          userID: userID,
           title: quiz.title,
-          qCount: quiz.qnas.length,
+          qCount: quiz.qnas?.length || -1,
         },
       });
 
@@ -52,10 +53,10 @@ export default class QuizUtils {
     }
   }
 
-  static async generateEntireQuiz(client: any, quiz: Quiz) {
-    const newQuiz = await this.generateQuiz(client, quiz);
+  static async generateEntireQuiz(client: any, quiz: Quiz, userID: number) {
+    const newQuiz = await this.generateQuiz(client, quiz, userID);
 
-    const qnas: QnA[] = quiz.qnas;
+    const qnas: QnA[] = quiz.qnas || [];
     for (let i = 0; i < qnas.length; i++) {
       const newQnA: QnA = await this.generateQnA(client, qnas[i], newQuiz.id!);
 
@@ -73,7 +74,7 @@ export default class QuizUtils {
       const newQuiz = client.quizzes.update({
         data: {
           title: quiz.title,
-          qCount: quiz.qnas.length,
+          qCount: quiz.qnas?.length || -1,
         },
         where: {
           id: quizID,

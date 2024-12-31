@@ -27,6 +27,7 @@ interface Quiz {
   qCount: number
   qnas: QnA[]
   dateCreated?: Date
+  updated?: Date
 }
 
 export type { User, Answer, QnA, Quiz }

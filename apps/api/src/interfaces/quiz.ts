@@ -14,9 +14,9 @@ export interface QnA {
 
 export default interface Quiz {
   id?: number;
-  userID: number;
+  userID?: number;
   title: string;
   qCount: number;
-  qnas: QnA[];
+  qnas?: QnA[];
   dateCreated?: Date;
 }

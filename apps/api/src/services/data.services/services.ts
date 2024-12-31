@@ -1,10 +1,10 @@
-import { NextFunction, Request } from "express";
+import { NextFunction, Request, Response } from "express";
 import prisma from "../../lib/prisma";
 import DataUtils from "./utils";
 import Quiz from "../../interfaces/quiz";
 
 export default class DataServices {
-  static async registerUser(req: Request, next: NextFunction) {
+  static async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, name, password } = req.body;
 
@@ -29,20 +29,26 @@ export default class DataServices {
       return newUser;
     } catch (err) {
       next(err);
+      res.status(401).send({
+        message: String(err)
+      })
     }
   }
 
-  static async getAllUsers(next: NextFunction) {
+  static async getAllUsers(req: Request, res: Response, next: NextFunction) {
     try {
       const allUsers = await prisma.users.findMany();
 
       return allUsers;
     } catch (err) {
       next(err);
+      res.status(401).send({
+        message: String(err)
+      })
     }
   }
 
-  static async createQuiz(req: Request, next: NextFunction) {
+  static async createQuiz(req: Request, res: Response, next: NextFunction) {
     try {
       const quiz = req.body.quiz as Quiz;
 
@@ -54,16 +60,22 @@ export default class DataServices {
       return newQuiz!;
     } catch (err) {
       next(err);
+      res.status(401).send({
+        message: String(err)
+      })
     }
   }
 
-  static async deleteAll(next: NextFunction) {
+  static async deleteAll(req: Request, res: Response, next: NextFunction) {
     try {
       await prisma.$transaction(async (prisma) => {
         await DataUtils.deleteAll(prisma);
       })
     } catch (err) {
       next(err);
+      res.status(401).send({
+        message: String(err)
+      })
     }
   }
 }
