@@ -15,38 +15,45 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const utils_1 = __importDefault(require("./utils"));
 class QuizServices {
-    static createQuiz(req, next) {
+    static createQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const quiz = req.body.quiz;
+                const userID = req.params.id;
                 let newQuiz;
                 yield prisma_1.default.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
-                    newQuiz = yield utils_1.default.generateEntireQuiz(prisma, quiz);
+                    newQuiz = yield utils_1.default.generateEntireQuiz(prisma, quiz, parseInt(userID));
                 }));
                 return newQuiz;
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
             }
         });
     }
-    static editQuiz(req, next) {
+    static editQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const newQuiz = req.body.quiz; // Quiz should contain current quizID
                 yield utils_1.default.validateFindQuizID(newQuiz.id);
                 yield prisma_1.default.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
                     yield utils_1.default.deleteQuiz(prisma, newQuiz.id);
-                    yield utils_1.default.generateEntireQuiz(prisma, newQuiz);
+                    yield utils_1.default.generateEntireQuiz(prisma, newQuiz, newQuiz.userID);
                 }));
                 return newQuiz;
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
             }
         });
     }
-    static removeQuiz(req, next) {
+    static removeQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const oldQuizID = req.body.id;
@@ -59,6 +66,38 @@ class QuizServices {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
+            }
+        });
+    }
+    static getQuizByQuizID(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const quizID = req.params.id;
+                const quiz = yield utils_1.default.validateFindQuizID(parseInt(quizID));
+                return quiz;
+            }
+            catch (err) {
+                next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
+            }
+        });
+    }
+    static getAllQuizzes(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const quizzes = yield utils_1.default.findAllQuizzes();
+                return quizzes;
+            }
+            catch (err) {
+                next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
             }
         });
     }

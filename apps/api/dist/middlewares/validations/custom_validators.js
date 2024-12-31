@@ -13,7 +13,7 @@ function checkQuestionHasCorrectAnswer(qna) {
     return questionHasCorrectAnswer;
 }
 function quizValidator(quiz) {
-    if (quiz.qnas.length < 1)
+    if (!quiz.qnas || quiz.qnas.length < 1)
         return false;
     let allQuestionsHaveACorrectAnswer = true;
     const qnas = quiz.qnas;

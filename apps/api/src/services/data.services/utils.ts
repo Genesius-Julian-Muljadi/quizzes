@@ -43,7 +43,7 @@ export default class DataUtils {
           id: quiz.id ? quiz.id : undefined,
           userID: quiz.userID,
           title: quiz.title,
-          qCount: quiz.qnas.length,
+          qCount: quiz.qnas!.length,
           dateCreated: quiz.dateCreated ? quiz.dateCreated : undefined,
         },
       });
@@ -91,7 +91,7 @@ export default class DataUtils {
   static async generateEntireQuiz(client: any, quiz: Quiz) {
     const newQuiz = await this.generateQuiz(client, quiz);
 
-    const qnas: QnA[] = quiz.qnas;
+    const qnas: QnA[] = quiz.qnas!;
     for (let i = 0; i < qnas.length; i++) {
       const newQnA: QnA = await this.generateQnA(client, qnas[i], newQuiz.id!);
 

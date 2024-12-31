@@ -21,9 +21,6 @@ export default class QuizServices {
       return newQuiz!;
     } catch (err) {
       next(err);
-      res.status(401).send({
-        message: String(err),
-      });
     }
   }
 
@@ -40,9 +37,6 @@ export default class QuizServices {
       return newQuiz;
     } catch (err) {
       next(err);
-      res.status(401).send({
-        message: String(err),
-      });
     }
   }
 
@@ -59,9 +53,6 @@ export default class QuizServices {
       return oldQuiz;
     } catch (err) {
       next(err);
-      res.status(401).send({
-        message: String(err),
-      });
     }
   }
 
@@ -77,9 +68,16 @@ export default class QuizServices {
       return quiz;
     } catch (err) {
       next(err);
-      res.status(401).send({
-        message: String(err),
-      });
+    }
+  }
+
+  static async getAllQuizzes(req: Request, res: Response, next: NextFunction) {
+    try {
+      const quizzes = await QuizUtils.findAllQuizzes();
+
+      return quizzes;
+    } catch (err) {
+      next(err);
     }
   }
 }

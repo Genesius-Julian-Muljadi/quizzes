@@ -27,6 +27,9 @@ class AuthControllers {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }
@@ -48,6 +51,9 @@ class AuthControllers {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }

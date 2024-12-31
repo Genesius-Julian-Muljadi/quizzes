@@ -15,7 +15,7 @@ function checkQuestionHasCorrectAnswer(qna: QnA): boolean {
 }
 
 export function quizValidator(quiz: Quiz): boolean {
-  if (quiz.qnas.length < 1) return false;
+  if (!quiz.qnas || quiz.qnas.length < 1) return false;
 
   let allQuestionsHaveACorrectAnswer: boolean = true;
 

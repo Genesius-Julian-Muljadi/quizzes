@@ -3,6 +3,7 @@ import PageTitle from '@/components/PageTitle'
 import SectionContainer from '@/components/SectionContainer'
 import ScrollTopAndComment from '@/components/ScrollTopAndComment'
 import { Quiz } from 'interfaces/database_tables'
+import siteMetadata from '@/data/siteMetadata'
 
 export default function TakeQuizLayout(
   { quiz }: { quiz: Quiz },
@@ -20,7 +21,7 @@ export default function TakeQuizLayout(
                   <dt className="sr-only">Published on</dt>
                   <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
                     <div>
-                      {Intl.DateTimeFormat('en-US', {
+                      {Intl.DateTimeFormat(siteMetadata.locale, {
                         weekday: 'long',
                         year: 'numeric',
                         month: 'long',

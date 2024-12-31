@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const utils_1 = __importDefault(require("./utils"));
 class DataServices {
-    static registerUser(req, next) {
+    static registerUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, name, password } = req.body;
@@ -37,10 +37,13 @@ class DataServices {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }
-    static getAllUsers(next) {
+    static getAllUsers(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const allUsers = yield prisma_1.default.users.findMany();
@@ -48,10 +51,13 @@ class DataServices {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }
-    static createQuiz(req, next) {
+    static createQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const quiz = req.body.quiz;
@@ -63,10 +69,13 @@ class DataServices {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }
-    static deleteAll(next) {
+    static deleteAll(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield prisma_1.default.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
@@ -75,6 +84,9 @@ class DataServices {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err)
+                });
             }
         });
     }

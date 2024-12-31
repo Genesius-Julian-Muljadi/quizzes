@@ -17,7 +17,7 @@ class QuizControllers {
     createQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQuiz = yield services_1.default.createQuiz(req, next);
+                const newQuiz = yield services_1.default.createQuiz(req, res, next);
                 res.status(201).send({
                     message: "Quiz created!",
                     data: newQuiz,
@@ -25,13 +25,16 @@ class QuizControllers {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
             }
         });
     }
     editQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQuiz = yield services_1.default.editQuiz(req, next);
+                const newQuiz = yield services_1.default.editQuiz(req, res, next);
                 res.status(200).send({
                     message: "Quiz editted!",
                     data: newQuiz,
@@ -39,13 +42,16 @@ class QuizControllers {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
             }
         });
     }
     removeQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const oldQuiz = yield services_1.default.removeQuiz(req, next);
+                const oldQuiz = yield services_1.default.removeQuiz(req, res, next);
                 res.status(200).send({
                     message: "Quiz deleted!",
                     data: oldQuiz,
@@ -53,6 +59,43 @@ class QuizControllers {
             }
             catch (err) {
                 next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
+            }
+        });
+    }
+    getQuizByQuizID(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const quiz = yield services_1.default.getQuizByQuizID(req, res, next);
+                res.status(200).send({
+                    message: "Quiz retrieved!",
+                    data: quiz,
+                });
+            }
+            catch (err) {
+                next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
+            }
+        });
+    }
+    getAllQuizzes(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const quizzes = yield services_1.default.getAllQuizzes(req, res, next);
+                res.status(200).send({
+                    message: "Quizzes retrieved!",
+                    data: quizzes,
+                });
+            }
+            catch (err) {
+                next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
             }
         });
     }

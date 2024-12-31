@@ -14,14 +14,16 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 class QuizUtils {
-    static generateQuiz(client, quiz) {
+    static generateQuiz(client, quiz, userID) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
-                const newQuiz = client.quizzes.create({
+                const newQuiz = yield client.quizzes.create({
                     data: {
                         id: quiz.id ? quiz.id : undefined,
+                        userID: userID,
                         title: quiz.title,
-                        qCount: quiz.qnas.length,
+                        qCount: ((_a = quiz.qnas) === null || _a === void 0 ? void 0 : _a.length) || -1,
                     },
                 });
                 return newQuiz;
@@ -34,7 +36,7 @@ class QuizUtils {
     static generateQnA(client, qna, quizID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQnA = client.quiz_QnA.create({
+                const newQnA = yield client.quiz_QnA.create({
                     data: {
                         id: qna.id ? qna.id : undefined,
                         quizID: quizID,
@@ -52,7 +54,7 @@ class QuizUtils {
     static generateAnswer(client, answer, qnaID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newAnswer = client.quiz_Answers.create({
+                const newAnswer = yield client.quiz_Answers.create({
                     data: {
                         id: answer.id ? answer.id : undefined,
                         qnaID: qnaID,
@@ -67,27 +69,33 @@ class QuizUtils {
             }
         });
     }
-    static generateEntireQuiz(client, quiz) {
+    static generateEntireQuiz(client, quiz, userID) {
         return __awaiter(this, void 0, void 0, function* () {
-            const newQuiz = yield this.generateQuiz(client, quiz);
-            const qnas = quiz.qnas;
-            for (let i = 0; i < qnas.length; i++) {
-                const newQnA = yield this.generateQnA(client, qnas[i], newQuiz.id);
-                const answers = qnas[i].answers;
-                for (let j = 0; j < answers.length; j++) {
-                    yield this.generateAnswer(client, answers[j], newQnA.id);
+            try {
+                const newQuiz = yield this.generateQuiz(client, quiz, userID);
+                const qnas = quiz.qnas || [];
+                for (let i = 0; i < qnas.length; i++) {
+                    const newQnA = yield this.generateQnA(client, qnas[i], newQuiz.id);
+                    const answers = qnas[i].answers;
+                    for (let j = 0; j < answers.length; j++) {
+                        yield this.generateAnswer(client, answers[j], newQnA.id);
+                    }
                 }
+                return newQuiz;
             }
-            return newQuiz;
+            catch (err) {
+                throw err;
+            }
         });
     }
     static updateQuiz(client, quiz, quizID) {
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             try {
-                const newQuiz = client.quizzes.update({
+                const newQuiz = yield client.quizzes.update({
                     data: {
                         title: quiz.title,
-                        qCount: quiz.qnas.length,
+                        qCount: ((_a = quiz.qnas) === null || _a === void 0 ? void 0 : _a.length) || -1,
                     },
                     where: {
                         id: quizID,
@@ -103,7 +111,7 @@ class QuizUtils {
     static updateQnA(client, qna, qnaID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQnA = client.quiz_QnA.update({
+                const newQnA = yield client.quiz_QnA.update({
                     data: {
                         question: qna.question,
                         multiple: qna.multiple,
@@ -122,7 +130,7 @@ class QuizUtils {
     static updateAnswer(client, answer, answerID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQnA = client.quiz_Answers.update({
+                const newQnA = yield client.quiz_Answers.update({
                     data: {
                         answer: answer.answer,
                         correct: answer.correct,
@@ -142,7 +150,7 @@ class QuizUtils {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // This will not result in an error due to onDelete: Cascade in schema.prisma
-                const deletedQuiz = client.quizzes.delete({
+                const deletedQuiz = yield client.quizzes.delete({
                     where: {
                         id: quizID,
                     },
@@ -158,7 +166,7 @@ class QuizUtils {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 // This will not result in an error due to onDelete: Cascade in schema.prisma
-                const deletedQnA = client.quiz_QnA.delete({
+                const deletedQnA = yield client.quiz_QnA.delete({
                     where: {
                         id: qnaID,
                     },
@@ -173,7 +181,7 @@ class QuizUtils {
     static deleteAnswer(client, answerID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const deletedAnswer = client.quiz_Answers.delete({
+                const deletedAnswer = yield client.quiz_Answers.delete({
                     where: {
                         id: answerID,
                     },
@@ -190,7 +198,7 @@ class QuizUtils {
             try {
                 if (typeof quizID !== "number")
                     throw new Error("Bad Quiz ID!");
-                const findQuiz = prisma_1.default.quizzes.findUnique({
+                const findQuiz = yield prisma_1.default.quizzes.findUnique({
                     where: {
                         id: quizID,
                     },
@@ -198,6 +206,21 @@ class QuizUtils {
                 if (!findQuiz)
                     throw new Error("Quiz ID not found!");
                 return findQuiz;
+            }
+            catch (err) {
+                throw err;
+            }
+        });
+    }
+    static findAllQuizzes() {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const findQuizzes = yield prisma_1.default.quizzes.findMany({});
+                if (!findQuizzes)
+                    throw new Error("Unable to find quizzes");
+                if (findQuizzes.length < 1)
+                    throw new Error("No quizzes available");
+                return findQuizzes;
             }
             catch (err) {
                 throw err;

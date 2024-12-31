@@ -21,6 +21,7 @@ export default class QuizRoutes {
     );
 
     this.router.get("/getQuiz/:id", this.controllers.getQuizByQuizID);
+    this.router.get("/getAllQuizzes", this.controllers.getAllQuizzes);
   }
 
   public getRoutes() {
