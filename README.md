@@ -36,7 +36,7 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
 
 - **Easy Installation (Run in terminal)**
 
-  - **Back-end**: Run in `./apps/api`.
+  - **Back-end**: Run in `apps/api`.
 
 ```bash
     npm init --y
@@ -66,7 +66,7 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
     npm i -D @types/milliseconds
 ```
 
-  - **Front-end**: Run in `./apps/web`.
+  - **Front-end**: Run in `apps/web`.
 
 ```bash
 yarn
@@ -80,7 +80,7 @@ $env:PWD = $(Get-Location).Path
 
 - **Environment Variables**
 
-  - **Back-end**: .env in `./apps/api`.
+  - **Back-end**: .env in `apps/api`.
 
 ```bash
 SECRET_KEY="I1gbjgmD3CND*"
@@ -94,7 +94,7 @@ DATABASE_URL="postgresql://postgres.taxjesxpqilqrayejynf:QuizzesasdQUIWE@aws-0-a
 DIRECT_URL="postgresql://postgres.taxjesxpqilqrayejynf:QuizzesasdQUIWE@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres?connect_timeout=200"
 ```
 
-  - **Front-end**: .env in `./apps/web`.
+  - **Front-end**: .env in `apps/web`.
 
 ```bash
 NEXT_PUBLIC_BASE_API_URL=[Your API URL]
