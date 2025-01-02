@@ -2,26 +2,26 @@ import { QnA } from 'interfaces/database_tables'
 import { ReactNode } from 'react'
 
 export default function QnAAccordion(
-  { qNumber }: { qNumber: number },
-  { qna }: { qna: QnA },
-  { children }: { children: ReactNode }
+  { qNumber, qna, children }: { qNumber: number; qna: QnA; children: ReactNode }
+  // { qna }: { qna: QnA },
+  // { children }: { children: ReactNode }
 ) {
   return (
     <div
-      className="group block w-full"
+      className="block w-full"
       aria-disabled="false"
       data-dui-accordion-container
-      data-dui-accordion-mode="all-open"
+      data-dui-accordion-mode="exclusive"
     >
       <div
         className="flex w-full cursor-pointer items-center justify-between py-5 text-left text-stone-800 dark:text-white"
         data-dui-accordion-toggle
-        data-dui-accordion-target="#allOpenAccordion1"
+        data-dui-accordion-target={`#allOpenAccordion${qNumber}`}
         aria-expanded="true"
       >
-        <div className="flex flex-col gap-1">
-          <p className="font-medium">{`${qNumber}. ${qna.question}`}</p>
-          <p className={`${qna.multiple ? '' : 'hidden '}font-light pl-2 text-sm italic`}>
+        <div className="flex flex-col gap-0">
+          <p className="font-bold">{`${qNumber}. ${qna.question}`}</p>
+          <p className={`${qna.multiple ? '' : 'hidden '}font-light pl-4 text-sm italic`}>
             Select all correct answers
           </p>
         </div>
@@ -45,8 +45,8 @@ export default function QnAAccordion(
         </svg>
       </div>
       <div
-        id="allOpenAccordion1"
-        className="overflow-hidden border-b border-stone-200 transition-all duration-300 dark:border-stone-700"
+        id={`allOpenAccordion${qNumber}`}
+        className="overflow-hidden transition-all duration-300"
       >
         {children}
       </div>

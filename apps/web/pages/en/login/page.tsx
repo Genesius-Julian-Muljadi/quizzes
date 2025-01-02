@@ -106,7 +106,7 @@ export default function LoginPageEn() {
                 >
                   Log in
                 </button>
-                <div className={`${submitted ? '' : 'hidden '}absolute right-[15%] top-1/4`}>
+                <div className={`${submitted ? '' : 'hidden '}absolute right-[15%] top-1/4 transform`}>
                   <BasicSpinner />
                 </div>
               </div>
