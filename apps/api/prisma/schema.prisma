@@ -55,10 +55,11 @@ model Quiz_Answers {
 }
 
 model Quiz_History {
-  id     Int     @id @default(autoincrement())
-  userID Int
-  user   Users   @relation(fields: [userID], references: [id], onDelete: Cascade)
-  quizID Int
-  quiz   Quizzes @relation(fields: [quizID], references: [id], onDelete: Cascade)
-  score  Int // How many questions they got correct. Partial correctness counts as wrong
+  id          Int      @id @default(autoincrement())
+  userID      Int
+  user        Users    @relation(fields: [userID], references: [id], onDelete: Cascade)
+  quizID      Int
+  quiz        Quizzes  @relation(fields: [quizID], references: [id], onDelete: Cascade)
+  score       Int // How many questions they got correct. Partial correctness counts as wrong
+  dateCreated DateTime @default(now())
 }
