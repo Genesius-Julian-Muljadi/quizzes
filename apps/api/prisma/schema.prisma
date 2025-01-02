@@ -15,24 +15,26 @@ datasource db {
 }
 
 model Users {
-  id          Int       @id @default(autoincrement())
-  name        String    @db.VarChar(30)
-  email       String    @unique
+  id          Int            @id @default(autoincrement())
+  name        String         @db.VarChar(30)
+  email       String         @unique
   password    String
   quizzes     Quizzes[]
-  dateCreated DateTime  @default(now())
-  updated     DateTime  @updatedAt
+  history     Quiz_History[]
+  dateCreated DateTime       @default(now())
+  updated     DateTime       @updatedAt
 }
 
 model Quizzes {
-  id          Int        @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   userID      Int
-  user        Users      @relation(fields: [userID], references: [id], onDelete: Cascade)
-  title       String     @db.VarChar(30)
+  user        Users          @relation(fields: [userID], references: [id], onDelete: Cascade)
+  title       String         @db.VarChar(30)
   qCount      Int
   qnas        Quiz_QnA[]
-  dateCreated DateTime   @default(now())
-  updated     DateTime   @updatedAt
+  history     Quiz_History[]
+  dateCreated DateTime       @default(now())
+  updated     DateTime       @updatedAt
 }
 
 model Quiz_QnA {
@@ -50,4 +52,13 @@ model Quiz_Answers {
   qna     Quiz_QnA @relation(fields: [qnaID], references: [id], onDelete: Cascade)
   answer  String   @db.VarChar(50)
   correct Boolean
+}
+
+model Quiz_History {
+  id     Int     @id @default(autoincrement())
+  userID Int
+  user   Users   @relation(fields: [userID], references: [id], onDelete: Cascade)
+  quizID Int
+  quiz   Quizzes @relation(fields: [quizID], references: [id], onDelete: Cascade)
+  score  Int // How many questions they got correct. Partial correctness counts as wrong
 }
