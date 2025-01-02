@@ -19,4 +19,5 @@ export default interface Quiz {
   qCount: number;
   qnas?: QnA[];
   dateCreated?: Date;
+  updated?: Date;
 }

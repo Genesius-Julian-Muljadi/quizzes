@@ -8,6 +8,7 @@ interface User {
 
 interface Answer {
   id?: number
+  qnaID?: number
   answer: string
   correct: boolean
 }

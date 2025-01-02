@@ -3,6 +3,7 @@
 import axios from 'axios'
 import MainEn from '../pages/en/Main'
 import { Quiz } from 'interfaces/database_tables'
+import SomethingWentWrong from '@/components/SomethingWentWrong'
 
 export default async function Page() {
   // const sortedPosts = sortPosts(allBlogs)
@@ -14,7 +15,6 @@ export default async function Page() {
 
     return <MainEn quizzes={quizzes} />
   } catch (err) {
-    console.log(err)
-    return <div className="text-center align-middle text-lg">Something went wrong!</div>
+    return <SomethingWentWrong err={err} />
   }
 }

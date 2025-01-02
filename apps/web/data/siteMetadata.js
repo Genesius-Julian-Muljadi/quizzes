@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'Quizzes',
   author: 'Tails Azimuth',
   headerTitle: 'TailwindBlog-turned-Quizzes',
-  description: 'A blog template created with Next.js and Tailwind.css, turned into quizzes',
+  description: 'A blog template created with Next.js and Tailwind.css, turned into quizzes.',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://tailwind-nextjs-starter-blog.vercel.app',

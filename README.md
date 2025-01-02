@@ -11,6 +11,7 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
 - Sign up and Log in
 - Supabase database integration
   - Database random populator available in footer
+- Main page
 
 ### In-Progress Features
 

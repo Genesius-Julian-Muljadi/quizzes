@@ -183,6 +183,13 @@ export default class QuizUtils {
         where: {
           id: quizID,
         },
+        include: {
+          qnas: {
+            include: {
+              answers: true,
+            },
+          },
+        },
       });
       if (!findQuiz) throw new Error("Quiz ID not found!");
 
