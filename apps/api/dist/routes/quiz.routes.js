@@ -16,8 +16,13 @@ class QuizRoutes {
     routes() {
         // Create quiz by userID
         this.router.post("/create/:id", this.validations.quizValidation, this.controllers.createQuiz);
+        this.router.post("/edit", this.validations.quizValidation, this.controllers.editQuiz);
+        this.router.delete("/delete", this.controllers.removeQuiz);
+        // Get quiz by quizID
         this.router.get("/getQuiz/:id", this.controllers.getQuizByQuizID);
         this.router.get("/getAllQuizzes", this.controllers.getAllQuizzes);
+        // Submit quiz with quiz-taker's ID
+        this.router.post("/submit/:id", this.controllers.submitQuiz);
     }
     getRoutes() {
         return this.router;

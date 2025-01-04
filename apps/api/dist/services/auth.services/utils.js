@@ -42,7 +42,7 @@ class AuthUtils {
             }
         });
     }
-    static verifyCredentials(user, password, res, next) {
+    static verifyCredentials(user, password) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 if (!user)
@@ -52,10 +52,7 @@ class AuthUtils {
                     throw new Error("Invalid credentials");
             }
             catch (err) {
-                next(err);
-                res.status(401).send({
-                    message: String(err)
-                });
+                throw err;
             }
         });
     }

@@ -24,6 +24,7 @@ class QuizUtils {
                         userID: userID,
                         title: quiz.title,
                         qCount: ((_a = quiz.qnas) === null || _a === void 0 ? void 0 : _a.length) || -1,
+                        dateCreated: quiz.dateCreated ? quiz.dateCreated : undefined,
                     },
                 });
                 return newQuiz;
@@ -202,6 +203,13 @@ class QuizUtils {
                     where: {
                         id: quizID,
                     },
+                    include: {
+                        qnas: {
+                            include: {
+                                answers: true,
+                            },
+                        },
+                    },
                 });
                 if (!findQuiz)
                     throw new Error("Quiz ID not found!");
@@ -221,6 +229,60 @@ class QuizUtils {
                 if (findQuizzes.length < 1)
                     throw new Error("No quizzes available");
                 return findQuizzes;
+            }
+            catch (err) {
+                throw err;
+            }
+        });
+    }
+    static sortAnswers(answers) {
+        return answers.sort((answerID_1, answerID_2) => parseInt(answerID_1) - parseInt(answerID_2));
+    }
+    static evaluateQnA(submission, valuation) {
+        const correctAnswers = valuation.answers
+            .filter((answer) => {
+            return answer.correct;
+        })
+            .map((answer) => {
+            return answer.id.toString();
+        });
+        if (Array.isArray(submission.answers)) {
+            const answerIDArray = submission.answers;
+            return (JSON.stringify(this.sortAnswers(correctAnswers)) ===
+                JSON.stringify(this.sortAnswers(answerIDArray)));
+        }
+        else {
+            const answerID = submission.answers;
+            return correctAnswers.length === 1 && answerID === correctAnswers[0];
+        }
+    }
+    static evaluateQuiz(submission, valuation) {
+        try {
+            if (parseInt(submission.id) !== valuation.id ||
+                submission.qnas.length !== valuation.qCount)
+                throw new Error("Quizzes incompatible");
+            let correctQnAs = 0;
+            for (let k in submission.qnas) {
+                if (this.evaluateQnA(submission.qnas[k], valuation.qnas[k]))
+                    correctQnAs++;
+            }
+            return correctQnAs;
+        }
+        catch (err) {
+            throw err;
+        }
+    }
+    static recordQuiz(userID, quizID, score) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const newRecord = yield prisma_1.default.quiz_History.create({
+                    data: {
+                        userID: userID,
+                        quizID: quizID,
+                        score: score,
+                    },
+                });
+                return newRecord;
             }
             catch (err) {
                 throw err;

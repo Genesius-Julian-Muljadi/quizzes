@@ -23,13 +23,13 @@ export default function TakeQuizLayout({ quiz, children }: { quiz: Quiz; childre
                         year: 'numeric',
                         month: 'long',
                         day: 'numeric',
-                      }).format(new Date(quiz.dateCreated!))}
+                      }).format(quiz ? new Date(quiz.dateCreated!) : new Date())}
                     </div>
                   </dd>
                 </div>
               </dl>
               <div>
-                <PageTitle>{quiz.title}</PageTitle>
+                <PageTitle>{quiz ? quiz.title : 'Title'}</PageTitle>
               </div>
             </div>
           </header>

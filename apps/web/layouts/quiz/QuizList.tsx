@@ -123,7 +123,7 @@ export default function QuizList({
               {displayPosts.map((post) => {
                 const { id, title, qCount, dateCreated } = post
                 return (
-                  <li key={id} className="py-5 border-b border-stone-800 dark:border-stone-200">
+                  <li key={id} className="border-b border-stone-800 py-5 dark:border-stone-200">
                     <article className="flex flex-col space-y-2 xl:space-y-0">
                       <dl>
                         <dt className="sr-only">Created on</dt>

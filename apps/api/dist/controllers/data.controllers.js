@@ -17,7 +17,7 @@ class DataControllers {
     populateUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newUser = yield services_1.default.registerUser(req, res, next);
+                const newUser = yield services_1.default.registerUser(req);
                 res.status(200).send({
                     message: "User inserted",
                     data: newUser,
@@ -26,7 +26,7 @@ class DataControllers {
             catch (err) {
                 next(err);
                 res.status(401).send({
-                    message: String(err)
+                    message: String(err),
                 });
             }
         });
@@ -34,7 +34,7 @@ class DataControllers {
     getAllUsers(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const allUsers = yield services_1.default.getAllUsers(req, res, next);
+                const allUsers = yield services_1.default.getAllUsers(req);
                 res.status(200).send({
                     message: "Users fetched",
                     data: allUsers,
@@ -43,7 +43,7 @@ class DataControllers {
             catch (err) {
                 next(err);
                 res.status(401).send({
-                    message: String(err)
+                    message: String(err),
                 });
             }
         });
@@ -51,7 +51,7 @@ class DataControllers {
     createQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQuiz = yield services_1.default.createQuiz(req, res, next);
+                const newQuiz = yield services_1.default.createQuiz(req);
                 res.status(201).send({
                     message: "Quiz populated",
                     data: newQuiz,
@@ -60,7 +60,7 @@ class DataControllers {
             catch (err) {
                 next(err);
                 res.status(401).send({
-                    message: String(err)
+                    message: String(err),
                 });
             }
         });
@@ -68,7 +68,7 @@ class DataControllers {
     deleteAll(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                yield services_1.default.deleteAll(req, res, next);
+                yield services_1.default.deleteAll(req);
                 res.status(200).send({
                     message: "All data deleted",
                 });
@@ -76,7 +76,7 @@ class DataControllers {
             catch (err) {
                 next(err);
                 res.status(401).send({
-                    message: String(err)
+                    message: String(err),
                 });
             }
         });

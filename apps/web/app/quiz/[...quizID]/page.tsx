@@ -1,11 +1,11 @@
 import 'css/prism.css'
 import 'katex/dist/katex.css'
 
-import TakeQuizEn from 'pages/en/quiz/takequiz'
 import axios from 'axios'
 import { Quiz } from 'interfaces/database_tables'
 import VerifyTokenServer from 'verifytoken/verifytokenserver'
 import SomethingWentWrong from '@/components/SomethingWentWrong'
+import TakeQuizEn from 'pages/en/quiz/takequiz'
 
 export default async function Page(props: { params: Promise<{ quizID: string[] }> }) {
   try {

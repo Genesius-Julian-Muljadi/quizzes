@@ -15,7 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 const utils_1 = __importDefault(require("./utils"));
 class DataServices {
-    static registerUser(req, res, next) {
+    static registerUser(req) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { email, name, password } = req.body;
@@ -36,28 +36,22 @@ class DataServices {
                 return newUser;
             }
             catch (err) {
-                next(err);
-                res.status(401).send({
-                    message: String(err)
-                });
+                throw err;
             }
         });
     }
-    static getAllUsers(req, res, next) {
+    static getAllUsers(req) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const allUsers = yield prisma_1.default.users.findMany();
                 return allUsers;
             }
             catch (err) {
-                next(err);
-                res.status(401).send({
-                    message: String(err)
-                });
+                throw err;
             }
         });
     }
-    static createQuiz(req, res, next) {
+    static createQuiz(req) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const quiz = req.body.quiz;
@@ -68,14 +62,11 @@ class DataServices {
                 return newQuiz;
             }
             catch (err) {
-                next(err);
-                res.status(401).send({
-                    message: String(err)
-                });
+                throw err;
             }
         });
     }
-    static deleteAll(req, res, next) {
+    static deleteAll(req) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield prisma_1.default.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
@@ -83,10 +74,7 @@ class DataServices {
                 }));
             }
             catch (err) {
-                next(err);
-                res.status(401).send({
-                    message: String(err)
-                });
+                throw err;
             }
         });
     }

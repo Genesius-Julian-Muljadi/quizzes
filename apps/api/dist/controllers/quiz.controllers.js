@@ -17,7 +17,7 @@ class QuizControllers {
     createQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQuiz = yield services_1.default.createQuiz(req, res, next);
+                const newQuiz = yield services_1.default.createQuiz(req);
                 res.status(201).send({
                     message: "Quiz created!",
                     data: newQuiz,
@@ -34,7 +34,7 @@ class QuizControllers {
     editQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQuiz = yield services_1.default.editQuiz(req, res, next);
+                const newQuiz = yield services_1.default.editQuiz(req);
                 res.status(200).send({
                     message: "Quiz editted!",
                     data: newQuiz,
@@ -51,7 +51,7 @@ class QuizControllers {
     removeQuiz(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const oldQuiz = yield services_1.default.removeQuiz(req, res, next);
+                const oldQuiz = yield services_1.default.removeQuiz(req);
                 res.status(200).send({
                     message: "Quiz deleted!",
                     data: oldQuiz,
@@ -68,7 +68,7 @@ class QuizControllers {
     getQuizByQuizID(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const quiz = yield services_1.default.getQuizByQuizID(req, res, next);
+                const quiz = yield services_1.default.getQuizByQuizID(req);
                 res.status(200).send({
                     message: "Quiz retrieved!",
                     data: quiz,
@@ -85,10 +85,27 @@ class QuizControllers {
     getAllQuizzes(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const quizzes = yield services_1.default.getAllQuizzes(req, res, next);
+                const quizzes = yield services_1.default.getAllQuizzes(req);
                 res.status(200).send({
                     message: "Quizzes retrieved!",
                     data: quizzes,
+                });
+            }
+            catch (err) {
+                next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
+            }
+        });
+    }
+    submitQuiz(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const evaluate_recordQuiz = yield services_1.default.evaluate_recordQuiz(req);
+                res.status(200).send({
+                    message: "Quiz submitted!",
+                    data: evaluate_recordQuiz,
                 });
             }
             catch (err) {

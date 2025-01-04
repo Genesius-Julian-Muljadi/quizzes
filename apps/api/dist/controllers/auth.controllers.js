@@ -17,7 +17,7 @@ class AuthControllers {
     registerUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const user = yield services_1.default.registerUser(req, res, next);
+                const user = yield services_1.default.registerUser(req);
                 if (!user)
                     throw new Error("Register failed");
                 res.status(200).send({
@@ -28,7 +28,7 @@ class AuthControllers {
             catch (err) {
                 next(err);
                 res.status(401).send({
-                    message: String(err)
+                    message: String(err),
                 });
             }
         });
@@ -36,7 +36,7 @@ class AuthControllers {
     loginUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const authToken = yield services_1.default.loginUser(req, res, next);
+                const authToken = yield services_1.default.loginUser(req);
                 if (!authToken)
                     throw new Error("Login failed");
                 res
@@ -52,7 +52,7 @@ class AuthControllers {
             catch (err) {
                 next(err);
                 res.status(401).send({
-                    message: String(err)
+                    message: String(err),
                 });
             }
         });
