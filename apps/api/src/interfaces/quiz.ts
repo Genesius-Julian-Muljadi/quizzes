@@ -21,3 +21,11 @@ export default interface Quiz {
   dateCreated?: Date;
   updated?: Date;
 }
+
+export interface History {
+  id?: number
+  userID: number
+  quizID: number
+  score: number
+  dateCreated?: Date
+}

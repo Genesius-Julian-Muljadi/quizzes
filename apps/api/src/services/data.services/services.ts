@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { Request } from "express";
 import prisma from "../../lib/prisma";
 import DataUtils from "./utils";
 import Quiz from "../../interfaces/quiz";
 
 export default class DataServices {
-  static async registerUser(req: Request, res: Response, next: NextFunction) {
+  static async registerUser(req: Request) {
     try {
       const { email, name, password } = req.body;
 
@@ -32,7 +32,7 @@ export default class DataServices {
     }
   }
 
-  static async getAllUsers(req: Request, res: Response, next: NextFunction) {
+  static async getAllUsers(req: Request) {
     try {
       const allUsers = await prisma.users.findMany();
 
@@ -42,7 +42,7 @@ export default class DataServices {
     }
   }
 
-  static async createQuiz(req: Request, res: Response, next: NextFunction) {
+  static async createQuiz(req: Request) {
     try {
       const quiz = req.body.quiz as Quiz;
 
@@ -57,11 +57,11 @@ export default class DataServices {
     }
   }
 
-  static async deleteAll(req: Request, res: Response, next: NextFunction) {
+  static async deleteAll(req: Request) {
     try {
       await prisma.$transaction(async (prisma) => {
         await DataUtils.deleteAll(prisma);
-      })
+      });
     } catch (err) {
       throw err;
     }

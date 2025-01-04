@@ -28,17 +28,14 @@ export default class AuthUtils {
     }
   }
 
-  static async verifyCredentials(user: any, password: string, res: Response, next: NextFunction) {
+  static async verifyCredentials(user: any, password: string) {
     try {
       if (!user) throw new Error("Invalid credentials");
 
       const passwordMatches = await compare(password, user.password);
       if (!passwordMatches) throw new Error("Invalid credentials");
     } catch (err) {
-      next(err);
-      res.status(401).send({
-        message: String(err)
-      })
+      throw err;
     }
   }
 }

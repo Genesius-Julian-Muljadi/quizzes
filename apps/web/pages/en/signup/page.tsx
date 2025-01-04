@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
 import { SignupSchema } from '../../../lib/validationSchemas/en/signupSchema'
-import BasicSpinner from 'assets/BasicSpinner'
+import BasicSpinner from 'assets/BasicSpinner/BasicSpinner'
 
 export default function SignupPageEn() {
   const [submitted, setSubmitted] = useState<boolean>(false)

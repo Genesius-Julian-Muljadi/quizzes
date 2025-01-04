@@ -1,21 +1,47 @@
 'use client'
 
+import Accordion from '@/components/Accordion'
 import AnswerContainer from '@/components/quiz/AnswerContainer'
 import QnAAccordion from '@/components/quiz/QnAAccordion'
 import TakeQuizContainer from '@/components/quiz/TakeQuizContainer'
 import TakeQuizInputField from '@/components/quiz/TakeQuizInputField'
 import TakeQuizLayout from '@/layouts/quiz/TakeQuizLayout'
-import BasicSpinner from 'assets/BasicSpinner'
-import { Form, Formik, FormikProps } from 'formik'
+import BasicSpinner from 'assets/BasicSpinner/BasicSpinner'
+import axios from 'axios'
+import ErrorHandler from 'errorhandler/error-handler'
+import { ErrorMessage, Field, FieldArray, Form, Formik, FormikProps } from 'formik'
 import { Answer, QnA, Quiz } from 'interfaces/database_tables'
 import { Submit_Quiz } from 'interfaces/quiz_submission'
 import { TakeQuizSchema } from 'lib/validationSchemas/en/takeQuizSchema'
+import { useRouter } from 'next/navigation'
 import { createContext, useState } from 'react'
+import Swal from 'sweetalert2'
 
 const SubmitContext = createContext<boolean>(false)
 
-export default function TakeQuizEn({ quiz }: { quiz: Quiz }) {
+export default function TakeQuizEn({ quiz, userID }: { quiz: Quiz; userID: number }) {
   const [submitted, setSubmitted] = useState<boolean>(false)
+  const router = useRouter()
+
+  const postTakeQuiz = async (params: Submit_Quiz) => {
+    try {
+      const API: string = process.env.NEXT_PUBLIC_BASE_API_URL + '/quiz/submit/' + userID
+      const output = await axios.post(API, { quiz: params })
+
+      if (!output) throw Error()
+
+      Swal.fire({
+        icon: 'success',
+        title: `Score: ${output.data.data.score}`,
+      })
+
+      router.push('/')
+      router.refresh()
+    } catch (err) {
+      setSubmitted(false)
+      ErrorHandler(err)
+    }
+  }
 
   return (
     <TakeQuizLayout quiz={quiz}>
@@ -23,70 +49,97 @@ export default function TakeQuizEn({ quiz }: { quiz: Quiz }) {
         <SubmitContext.Provider value={submitted}>
           <Formik
             initialValues={{
-              id: quiz.id!,
+              id: quiz.id!.toString(),
               qnas: [],
             }}
-            validationSchema={TakeQuizSchema}
+            validationSchema={TakeQuizSchema(quiz.qCount)}
             onSubmit={(values) => {
               setSubmitted(true)
-              console.log(JSON.stringify(values, null, 2))
-              // postLogin(values)
+              postTakeQuiz(values)
             }}
           >
             {(props: FormikProps<Submit_Quiz>) => {
-              const { values, errors, touched, handleChange } = props
+              const { values, errors, touched, handleChange, setFieldValue, submitCount } = props
 
               return (
                 <Form className="flex w-full flex-col gap-0 bg-transparent px-4 py-8 shadow-lg">
-                  {quiz.qnas.map((qna: QnA, index) => (
-                    <div key={index}>
-                      <QnAAccordion qNumber={index + 1} qna={qna}>
-                        <AnswerContainer qna={qna}>
-                          {qna.answers.map((answer: Answer, idx) => (
-                            <div key={idx}>
-                              <TakeQuizInputField
-                                type={qna.multiple ? 'checkbox' : 'radio'}
-                                formikProps={props}
-                                answer={answer}
-                              />
+                  <Field type="hidden" name="id" value={quiz.id} />
+                  <FieldArray name="qnas">
+                    {(arrayHelpers) => (
+                      <div>
+                        {quiz.qnas.map((qna: QnA, index) => (
+                          <div key={`qna-${index}`}>
+                            <Field type="hidden" name={`qnas[${index}].id`} value={qna.id} />
+                            <QnAAccordion qNumber={index + 1} qna={qna}>
+                              <AnswerContainer qna={qna}>
+                                {qna.answers.map((answer: Answer, idx) => (
+                                  <div key={`answer-${idx}`}>
+                                    <div className="flex items-center justify-normal pl-4 sm:pl-6">
+                                      <label
+                                        className="relative flex cursor-pointer items-center"
+                                        htmlFor={`custom-${answer.id}`}
+                                      >
+                                        <Field
+                                          type={qna.multiple ? 'checkbox' : 'radio'}
+                                          name={`qnas[${index}].answers`}
+                                          onChange={(e) => {
+                                            setFieldValue(`qnas[${index}].id`, qna.id?.toString())
+                                            handleChange(e)
+                                          }}
+                                          value={`${answer.id}`}
+                                          disabled={submitted}
+                                          aria-label={`Answer: ${answer.answer}`}
+                                          className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-stone-200 shadow-sm transition-all checked:border-stone-800 checked:bg-stone-800 hover:shadow"
+                                          id={`custom-${answer.id}`}
+                                        />
+                                      </label>
+                                      <label
+                                        className="ml-5 cursor-pointer text-sm text-black dark:text-white"
+                                        htmlFor={`custom-${answer.id}`}
+                                      >
+                                        {answer.answer}
+                                        {/* Use this to display correct answers */}
+                                        {/* {answer.correct ? ' Correct' : ' Incorrect'} */}
+                                      </label>
+                                    </div>
+                                    <ErrorMessage name={`qnas[${index}].answers`} >
+                                      {(err) => {
+                                        console.log(err)
+                                        return (
+                                          <div className="mt-2 flex flex-col text-center text-sm text-red-600">
+                                            <span>{err}</span>
+                                          </div>
+                                        )
+                                      }}
+                                    </ErrorMessage>
+                                  </div>
+                                ))}
+                              </AnswerContainer>
+                            </QnAAccordion>
+                          </div>
+                        ))}
+                        <div className="relative mt-8">
+                          <button
+                            type="submit"
+                            className="mx-auto flex h-12 items-center justify-center rounded bg-blue-600 px-6 text-sm font-semibold text-blue-100 shadow-sm shadow-slate-400 hover:bg-blue-700 sm:w-64"
+                            aria-label="Submit button"
+                          >
+                            <span>Submit Answers</span>
+                          </button>
+                          <div
+                            className={`${submitted ? '' : 'hidden '}absolute right-[15%] top-1/4 transform`}
+                          >
+                            <BasicSpinner />
+                          </div>
+                          {touched.qnas && errors.qnas && submitCount > 0 ? (
+                            <div className="mt-2 flex flex-col text-center text-sm text-red-600">
+                              <span>Please answer all questions</span>
                             </div>
-                          ))}
-                        </AnswerContainer>
-                      </QnAAccordion>
-                    </div>
-                  ))}
-                  {/* <div className="flex flex-col gap-1">
-                    <label htmlFor="password" className="text-sm font-semibold text-black">
-                      Password{' '}
-                    </label>
-                    <Field
-                      type="password"
-                      name="password"
-                      onChange={handleChange}
-                      values={values.password}
-                      placeholder="Type password here"
-                      disabled={submitted}
-                      aria-label="Password text box"
-                      className={`mt-2 flex h-10 w-full items-center rounded bg-gray-100 px-2 text-sm text-black focus:outline-1 focus:ring-zinc-600 sm:h-12 sm:px-4 sm:text-base`}
-                    />
-                    {touched.password && errors.password ? (
-                      <div className="text-xs text-red-600">{errors.password}</div>
-                    ) : null}
-                  </div> */}
-                  <div className="relative mt-8">
-                    <button
-                      type="submit"
-                      className="mx-auto flex h-12 items-center justify-center rounded bg-blue-600 px-6 text-sm font-semibold text-blue-100 shadow-sm shadow-slate-400 hover:bg-blue-700 sm:w-64"
-                      aria-label="Submit button"
-                    >
-                      <span>Submit Answers</span>
-                    </button>
-                    <div
-                      className={`${submitted ? '' : 'hidden '}absolute right-[15%] top-1/4 transform`}
-                    >
-                      <BasicSpinner />
-                    </div>
-                  </div>
+                          ) : null}
+                        </div>
+                      </div>
+                    )}
+                  </FieldArray>
                 </Form>
               )
             }}

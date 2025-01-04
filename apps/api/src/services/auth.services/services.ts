@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from "express";
+import { Request } from "express";
 import prisma from "../../lib/prisma";
 import { sign } from "jsonwebtoken";
 import { SECRET_KEY } from "../../config";
 import AuthUtils from "./utils";
 
 export default class AuthServices {
-  static async registerUser(req: Request, res: Response, next: NextFunction) {
+  static async registerUser(req: Request) {
     try {
       const { name, email, password } = req.body;
 
@@ -30,12 +30,12 @@ export default class AuthServices {
     }
   }
 
-  static async loginUser(req: Request, res: Response, next: NextFunction) {
+  static async loginUser(req: Request) {
     try {
       const { email, password } = req.body;
       const findUser = await AuthUtils.findUserByEmail(email);
 
-      AuthUtils.verifyCredentials(findUser, password, res, next);
+      await AuthUtils.verifyCredentials(findUser, password);
 
       const payload = {
         id: findUser!.id,

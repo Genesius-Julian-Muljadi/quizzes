@@ -56,7 +56,7 @@ model Quiz_Answers {
 
 model Quiz_History {
   id          Int      @id @default(autoincrement())
-  userID      Int
+  userID      Int // Who took the quiz?
   user        Users    @relation(fields: [userID], references: [id], onDelete: Cascade)
   quizID      Int
   quiz        Quizzes  @relation(fields: [quizID], references: [id], onDelete: Cascade)

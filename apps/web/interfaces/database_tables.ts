@@ -31,4 +31,12 @@ interface Quiz {
   updated?: Date
 }
 
-export type { User, Answer, QnA, Quiz }
+interface History {
+  id?: number
+  userID: number
+  quizID: number
+  score: number
+  dateCreated?: Date
+}
+
+export type { User, Answer, QnA, Quiz, History }

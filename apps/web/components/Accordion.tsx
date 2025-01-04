@@ -1,17 +1,4 @@
-'use client'
-
-import { QnA } from 'interfaces/database_tables'
-import { ReactNode } from 'react'
-
-export default function QnAAccordion({
-  qNumber,
-  qna,
-  children,
-}: {
-  qNumber: number
-  qna: QnA
-  children: ReactNode
-}) {
+export default function Accordion({ key }: { key: number }) {
   function toggleAccordion(index: number) {
     const content = document.getElementById(`content-${index}`) as HTMLDivElement
     const icon = document.getElementById(`icon-${index}`) as HTMLSpanElement
@@ -33,31 +20,23 @@ export default function QnAAccordion({
     // Toggle the content's max-height for smooth opening and closing
     if (content.style.maxHeight && content.style.maxHeight !== '0px') {
       content.style.maxHeight = '0'
-      if (icon) icon.innerHTML = upSVG
+      icon.innerHTML = upSVG
     } else {
       content.style.maxHeight = content.scrollHeight + 'px'
-      if (icon) icon.innerHTML = downSVG
+      icon.innerHTML = downSVG
     }
   }
 
   return (
     <div>
-      <div className="border-b border-slate-200">
+      <div className="border border-slate-200">
         <button
-          onClick={() => toggleAccordion(qNumber)}
-          type="button"
+          onClick={() => toggleAccordion(key)}
           className="flex w-full items-center justify-between py-5 text-slate-800 dark:text-slate-200"
         >
-          <div className="flex flex-col gap-0">
-            <span className="font-bold">{`${qNumber}. ${qna.question}`}</span>
-            <span
-              className={`${qna.multiple ? '' : 'hidden '}font-light pl-4 text-left text-sm italic`}
-            >
-              Select all correct answers
-            </span>
-          </div>
+          <span>What is Material Tailwind?</span>
           <span
-            id={`icon-${qNumber}`}
+            id="icon-1"
             className="text-slate-800 transition-transform duration-300 dark:text-slate-200"
           >
             <svg
@@ -75,10 +54,13 @@ export default function QnAAccordion({
           </span>
         </button>
         <div
-          id={`content-${qNumber}`}
+          id={`content-${key}`}
           className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
         >
-          <div className="pb-5 text-sm text-slate-500">{children}</div>
+          <div className="pb-5 text-sm text-slate-500">
+            Material Tailwind is a framework that enhances Tailwind CSS with additional styles and
+            components.
+          </div>
         </div>
       </div>
     </div>

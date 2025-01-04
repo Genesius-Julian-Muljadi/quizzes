@@ -1,16 +1,11 @@
 import Link from '@/components/Link'
-import Tag from '@/components/Tag'
 import siteMetadata from '@/data/siteMetadata'
 import { formatDate } from 'pliny/utils/formatDate'
-import NewsletterForm from 'pliny/ui/NewsletterForm'
-import { sortPosts, allCoreContent } from 'pliny/utils/contentlayer'
-import { allBlogs } from 'contentlayer/generated'
 import { Quiz } from 'interfaces/database_tables'
 import SomethingWentWrong from '@/components/SomethingWentWrong'
 
-const MAX_DISPLAY = 5
+const MAX_DISPLAY = 10
 
-// export default function Home({ posts }) {
 export default function Home({ quizzes }: { quizzes: Quiz[] }) {
   try {
     return (
@@ -51,11 +46,6 @@ export default function Home({ quizzes }: { quizzes: Quiz[] }) {
                                 {title}
                               </Link>
                             </h2>
-                            {/* <div className="flex flex-wrap">
-                              {tags.map((tag) => (
-                                <Tag key={tag} text={tag} />
-                              ))}
-                            </div> */}
                             <div className="prose max-w-none text-gray-500 dark:text-gray-400">
                               {`${qCount} question${qCount === 1 ? '' : 's'}`}
                             </div>
@@ -89,11 +79,6 @@ export default function Home({ quizzes }: { quizzes: Quiz[] }) {
             </Link>
           </div>
         )}
-        {/* {siteMetadata.newsletter?.provider && (
-          <div className="flex items-center justify-center pt-4">
-            <NewsletterForm />
-          </div>
-        )} */}
       </>
     )
   } catch (err) {

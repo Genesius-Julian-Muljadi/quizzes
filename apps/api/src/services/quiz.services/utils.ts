@@ -1,4 +1,5 @@
 import Quiz, { Answer, QnA } from "../../interfaces/quiz";
+import { Submit_QnA, Submit_Quiz } from "../../interfaces/quiz_submission";
 import prisma from "../../lib/prisma";
 
 export default class QuizUtils {
@@ -10,6 +11,7 @@ export default class QuizUtils {
           userID: userID,
           title: quiz.title,
           qCount: quiz.qnas?.length || -1,
+          dateCreated: quiz.dateCreated ? quiz.dateCreated : undefined,
         },
       });
 
@@ -206,6 +208,71 @@ export default class QuizUtils {
       if (findQuizzes.length < 1) throw new Error("No quizzes available");
 
       return findQuizzes;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static sortAnswers(answers: string[]): string[] {
+    return answers.sort(
+      (answerID_1: string, answerID_2: string) =>
+        parseInt(answerID_1) - parseInt(answerID_2)
+    );
+  }
+
+  static evaluateQnA(submission: Submit_QnA, valuation: QnA): boolean {
+    const correctAnswers: string[] = valuation.answers
+      .filter((answer) => {
+        return answer.correct;
+      })
+      .map((answer) => {
+        return answer.id!.toString();
+      });
+
+    if (Array.isArray(submission.answers)) {
+      const answerIDArray: string[] = submission.answers as string[];
+      return (
+        JSON.stringify(this.sortAnswers(correctAnswers)) ===
+        JSON.stringify(this.sortAnswers(answerIDArray))
+      );
+    } else {
+      const answerID: string = submission.answers as string;
+      return correctAnswers.length === 1 && answerID === correctAnswers[0];
+    }
+  }
+
+  static evaluateQuiz(submission: Submit_Quiz, valuation: Quiz): number {
+    try {
+      if (
+        parseInt(submission.id) !== valuation.id ||
+        submission.qnas.length !== valuation.qCount
+      )
+        throw new Error("Quizzes incompatible");
+
+      let correctQnAs: number = 0;
+
+      for (let k in submission.qnas) {
+        if (this.evaluateQnA(submission.qnas[k], valuation.qnas![k]))
+          correctQnAs++;
+      }
+
+      return correctQnAs;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async recordQuiz(userID: number, quizID: number, score: number) {
+    try {
+      const newRecord = await prisma.quiz_History.create({
+        data: {
+          userID: userID,
+          quizID: quizID,
+          score: score,
+        },
+      });
+
+      return newRecord;
     } catch (err) {
       throw err;
     }

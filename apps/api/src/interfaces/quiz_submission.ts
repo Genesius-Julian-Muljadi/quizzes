@@ -1,13 +1,9 @@
-export interface Submit_Answer {
-  id: number
-}
-
 export interface Submit_QnA {
-  id: number
-  answers: Submit_Answer | Submit_Answer[]
+  id: string
+  answers: string | string[]
 }
 
 export interface Submit_Quiz {
-  id: number
+  id: string
   qnas: Submit_QnA[]
 }

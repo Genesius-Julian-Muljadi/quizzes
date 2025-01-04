@@ -6,7 +6,7 @@ import { LoginUser } from 'interfaces/loginform'
 import axios from 'axios'
 import ErrorHandler from 'errorhandler/error-handler'
 import Swal from 'sweetalert2'
-import BasicSpinner from 'assets/BasicSpinner'
+import BasicSpinner from 'assets/BasicSpinner/BasicSpinner'
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 
