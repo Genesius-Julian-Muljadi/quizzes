@@ -12,10 +12,10 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
 - Supabase database integration
   - Database random populator available in footer
 - Main page
+- Take a quiz
 
 ### In-Progress Features
 
-- Take a quiz
 - Create quiz
 - Quiz history
 - Arabic language support
