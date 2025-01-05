@@ -20,10 +20,13 @@ export default class Server {
   private middlewares() {
     this.app.use(
       cors({
-        // origin: true,
-        origin: [String(BASE_WEB_URL)],
+        origin: true,
+        // origin: [
+        //   String(BASE_WEB_URL),
+        //   "https://quizzes-oujrvrvva-genesius-julian-muljadis-projects.vercel.app/",
+        // ],
         credentials: true,
-        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
       })
     );
     this.app.use(helmet());
