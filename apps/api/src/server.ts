@@ -1,6 +1,6 @@
 import express, { Application } from "express";
 import cors from "cors";
-import { PORT } from "./config";
+import { PORT, BASE_WEB_URL } from "./config";
 import helmet from "helmet";
 import AuthRoutes from "./routes/auth.routes";
 import QuizRoutes from "./routes/quiz.routes";
@@ -20,8 +20,10 @@ export default class Server {
   private middlewares() {
     this.app.use(
       cors({
-        origin: true,
+        // origin: true,
+        origin: [String(BASE_WEB_URL)],
         credentials: true,
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
       })
     );
     this.app.use(helmet());
