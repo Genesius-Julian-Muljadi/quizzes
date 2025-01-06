@@ -13,8 +13,8 @@ export default function QnAAccordion({
   children: ReactNode
 }) {
   function toggleAccordion(index: number) {
-    const content = document.getElementById(`content-${index}`) as HTMLDivElement
-    const icon = document.getElementById(`icon-${index}`) as HTMLSpanElement
+    const content = document.getElementById(`content-${qna.id}-${index}`) as HTMLDivElement
+    const icon = document.getElementById(`icon-${qna.id}-${index}`) as HTMLSpanElement
 
     // SVG for Down icon
     const downSVG = `
@@ -57,7 +57,7 @@ export default function QnAAccordion({
             </span>
           </div>
           <span
-            id={`icon-${qNumber}`}
+            id={`icon-${qna.id}-${qNumber}`}
             className="text-slate-800 transition-transform duration-300 dark:text-slate-200"
           >
             <svg
@@ -75,7 +75,7 @@ export default function QnAAccordion({
           </span>
         </button>
         <div
-          id={`content-${qNumber}`}
+          id={`content-${qna.id}-${qNumber}`}
           className="max-h-0 overflow-hidden transition-all duration-300 ease-in-out"
         >
           <div className="pb-5 text-sm text-slate-500">{children}</div>

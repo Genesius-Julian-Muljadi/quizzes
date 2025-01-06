@@ -21,7 +21,7 @@ export default function CompletedQuizEn({
 }) {
   try {
     if (!histories || !quizzes) return null
-    
+
     const pageNumber = 1
     const initialDisplayPosts = histories.slice(
       pageLimit * (pageNumber - 1),
@@ -61,54 +61,52 @@ export default function CompletedQuizEn({
                           <div>
                             {quiz
                               ? quiz.qnas.map((qna: QnA, qnaIndex) => (
-                                  <div key={`qna-history-${qnaIndex}`}>
+                                  <div key={`qna-history-${postIndex}-${qnaIndex}`}>
                                     <QnAAccordion qNumber={qnaIndex + 1} qna={qna}>
                                       <AnswerContainer qna={qna}>
-                                        <div>
-                                          {qna.answers.map((answer: Answer, answerIndex) => {
-                                            return (
-                                              <div key={`answer-history-${answerIndex}`}>
-                                                <div className="flex items-center justify-normal pl-4 sm:pl-6">
-                                                  <label
-                                                    className="relative flex cursor-pointer items-center"
-                                                    htmlFor={`custom-${answer.id}`}
+                                        {qna.answers.map((answer: Answer, answerIndex) => {
+                                          function checkAnswer(): boolean {
+                                            const answers = submission.qnas[qnaIndex].answers
+                                            if (Array.isArray(answers)) {
+                                              return answers.includes(String(answer.id))
+                                            } else {
+                                              return answers === String(answer.id)
+                                            }
+                                          }
+                                          return (
+                                            <div
+                                              key={`answer-history-${postIndex}-${qnaIndex}-${answerIndex}`}
+                                            >
+                                              <div className="flex items-center justify-normal pl-4 sm:pl-6">
+                                                <label
+                                                  className="relative flex cursor-pointer items-center"
+                                                  htmlFor={`custom-${answer.id}`}
+                                                >
+                                                  <input
+                                                    type={qna.multiple ? 'checkbox' : 'radio'}
+                                                    name={`qnas[${qnaIndex}].answers`}
+                                                    disabled={true}
+                                                    checked={checkAnswer()}
+                                                    aria-label={`Answer: ${answer.answer} ${answer.correct ? ' Correct' : ' Incorrect'}`}
+                                                    className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-stone-200 shadow-sm transition-all checked:border-stone-800 checked:bg-stone-800 hover:shadow"
+                                                    id={`custom-${answer.id}`}
+                                                  />
+                                                </label>
+                                                <label
+                                                  className="ml-5 cursor-pointer text-sm text-black dark:text-white"
+                                                  htmlFor={`custom-${answer.id}`}
+                                                >
+                                                  {answer.answer}
+                                                  <span
+                                                    className={`${answer.correct ? 'text-green-400 dark:text-green-600' : 'text-red-500 dark:text-red-700'} font-bold`}
                                                   >
-                                                    <input
-                                                      type={qna.multiple ? 'checkbox' : 'radio'}
-                                                      name={`qnas[${qnaIndex}].answers`}
-                                                      value={`${answer.id}`}
-                                                      disabled={true}
-                                                      checked={
-                                                        Array.isArray(
-                                                          submission.qnas[qnaIndex].answers
-                                                        )
-                                                          ? submission.qnas[
-                                                              qnaIndex
-                                                            ].answers.includes(String(answer.id))
-                                                          : submission.qnas[qnaIndex].answers ===
-                                                            String(answer.id)
-                                                      }
-                                                      aria-label={`Answer: ${answer.answer} ${answer.correct ? ' Correct' : ' Incorrect'}`}
-                                                      className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-stone-200 shadow-sm transition-all checked:border-stone-800 checked:bg-stone-800 hover:shadow"
-                                                      id={`custom-${answer.id}`}
-                                                    />
-                                                  </label>
-                                                  <label
-                                                    className="ml-5 cursor-pointer text-sm text-black dark:text-white"
-                                                    htmlFor={`custom-${answer.id}`}
-                                                  >
-                                                    {answer.answer}
-                                                    <span
-                                                      className={`${answer.correct ? 'text-green-400 dark:text-green-600' : 'text-red-500 dark:text-red-700'} font-bold`}
-                                                    >
-                                                      {answer.correct ? ' Correct' : ' Incorrect'}
-                                                    </span>
-                                                  </label>
-                                                </div>
+                                                    {answer.correct ? ' Correct' : ' Incorrect'}
+                                                  </span>
+                                                </label>
                                               </div>
-                                            )
-                                          })}
-                                        </div>
+                                            </div>
+                                          )
+                                        })}
                                       </AnswerContainer>
                                     </QnAAccordion>
                                   </div>

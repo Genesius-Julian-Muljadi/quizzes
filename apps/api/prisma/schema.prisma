@@ -61,6 +61,6 @@ model Quiz_History {
   quizID      Int
   quiz        Quizzes  @relation(fields: [quizID], references: [id], onDelete: Cascade)
   score       Int // How many questions they got correct. Partial correctness counts as wrong
-  submission  String // stringified JSON object
+  submission  String   @db.Text() // stringified JSON object
   dateCreated DateTime @default(now())
 }

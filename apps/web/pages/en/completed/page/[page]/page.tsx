@@ -23,7 +23,7 @@ export default function PaginatedCompletedQuizEn({
 }) {
   try {
     if (!histories || !quizzes) return null
-    
+
     const pageNumber = parseInt(params.page as string)
     const initialDisplayPosts = histories.slice(
       pageLimit * (pageNumber - 1),
@@ -63,13 +63,15 @@ export default function PaginatedCompletedQuizEn({
                           <div>
                             {quiz
                               ? quiz.qnas.map((qna: QnA, qnaIndex) => (
-                                  <div key={`qna-history-${qnaIndex}`}>
+                                  <div key={`qna-history-${postIndex}-${qnaIndex}`}>
                                     <QnAAccordion qNumber={qnaIndex + 1} qna={qna}>
                                       <AnswerContainer qna={qna}>
                                         <div>
                                           {qna.answers.map((answer: Answer, answerIndex) => {
                                             return (
-                                              <div key={`answer-history-${answerIndex}`}>
+                                              <div
+                                                key={`answer-history-${postIndex}-${qnaIndex}-${answerIndex}`}
+                                              >
                                                 <div className="flex items-center justify-normal pl-4 sm:pl-6">
                                                   <label
                                                     className="relative flex cursor-pointer items-center"
@@ -78,7 +80,6 @@ export default function PaginatedCompletedQuizEn({
                                                     <input
                                                       type={qna.multiple ? 'checkbox' : 'radio'}
                                                       name={`qnas[${qnaIndex}].answers`}
-                                                      value={`${answer.id}`}
                                                       disabled={true}
                                                       checked={
                                                         Array.isArray(
