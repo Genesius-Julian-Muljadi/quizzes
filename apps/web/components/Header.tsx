@@ -7,6 +7,7 @@ import ThemeSwitch from './ThemeSwitch'
 import SearchButton from './SearchButton'
 import VerifyTokenServer from 'verifytoken/verifytokenserver'
 import headerNavLinksLoggedIn from '@/data/headerNavLinksLoggedIn'
+import LogoutButton from './LogoutButton'
 
 const Header = async () => {
   try {
@@ -47,6 +48,7 @@ const Header = async () => {
                   {link.title}
                 </Link>
               ))}
+            {token ? <LogoutButton /> : null}
           </div>
           <SearchButton />
           <ThemeSwitch />
