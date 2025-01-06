@@ -13,11 +13,11 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
   - Database random populator available in footer
 - Main page
 - Take a quiz
+- Quiz history
 
 ### In-Progress Features
 
 - Create quiz
-- Quiz history
 - Arabic language support
 
 ### Technologies

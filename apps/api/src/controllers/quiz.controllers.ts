@@ -103,4 +103,20 @@ export default class QuizControllers {
       });
     }
   }
+
+  public async getHistoryByUserID(req: Request, res: Response, next: NextFunction) {
+    try {
+      const quizzes = await QuizServices.getHistory(req);
+
+      res.status(200).send({
+        message: "Quizzes retrieved!",
+        data: quizzes,
+      });
+    } catch (err) {
+      next(err);
+      res.status(401).send({
+        message: String(err),
+      });
+    }
+  }
 }

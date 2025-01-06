@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Quiz } from 'interfaces/database_tables'
 import VerifyTokenServer from 'verifytoken/verifytokenserver'
 import SomethingWentWrong from '@/components/SomethingWentWrong'
-import TakeQuizEn from 'pages/en/quiz/takequiz'
+import TakeQuizEn from 'pages/en/quiz/page'
 
 export default async function Page(props: { params: Promise<{ quizID: string[] }> }) {
   try {
@@ -15,8 +15,9 @@ export default async function Page(props: { params: Promise<{ quizID: string[] }
     const quiz: Quiz = quizRaw.data.data
 
     const token = await VerifyTokenServer()
+    if (!token) throw new Error('You must be logged in to view this page.')
 
-    return <TakeQuizEn quiz={quiz} userID={token!.id} />
+    return <TakeQuizEn quiz={quiz} userID={token.id} />
   } catch (err) {
     return <SomethingWentWrong err={err} />
   }

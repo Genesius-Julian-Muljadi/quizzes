@@ -1,4 +1,4 @@
-import QuizList from '@/layouts/quiz/QuizList'
+import QuizList from '@/layouts/quiz/QuizListLayout'
 import { Quiz } from 'interfaces/database_tables'
 import axios from 'axios'
 

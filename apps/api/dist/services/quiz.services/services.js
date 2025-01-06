@@ -80,7 +80,8 @@ class QuizServices {
     static getAllQuizzes(req) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const quizzes = yield utils_1.default.findAllQuizzes();
+                const userID = req.params.id ? req.params.id : undefined;
+                const quizzes = yield utils_1.default.findAllQuizzes(userID ? parseInt(userID) : undefined);
                 return quizzes;
             }
             catch (err) {
@@ -95,8 +96,20 @@ class QuizServices {
                 const userID = req.params.id;
                 const valuationQuiz = yield utils_1.default.validateFindQuizID(parseInt(submittedQuiz.id));
                 const correctQnAs = utils_1.default.evaluateQuiz(submittedQuiz, valuationQuiz);
-                const newRecord = yield utils_1.default.recordQuiz(parseInt(userID), parseInt(submittedQuiz.id), correctQnAs);
+                const newRecord = yield utils_1.default.recordQuiz(parseInt(userID), parseInt(submittedQuiz.id), correctQnAs, submittedQuiz);
                 return { score: correctQnAs, record: newRecord };
+            }
+            catch (err) {
+                throw err;
+            }
+        });
+    }
+    static getHistory(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userID = req.params.id;
+                const quizzes = yield utils_1.default.findHistory(parseInt(userID));
+                return quizzes;
             }
             catch (err) {
                 throw err;

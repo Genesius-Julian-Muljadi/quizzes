@@ -13,7 +13,7 @@ import PostBanner from '@/layouts/PostBanner'
 import { Metadata } from 'next'
 import siteMetadata from '@/data/siteMetadata'
 import { notFound } from 'next/navigation'
-import TakeQuizEn from 'pages/en/quiz/takequiz'
+import TakeQuizEn from 'pages/en/quiz/page'
 
 const defaultLayout = 'PostLayout'
 const layouts = {

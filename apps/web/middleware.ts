@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { NextURL } from 'next/dist/server/web/next-url'
 
-// const protectedRoutes = ['/events/purchase', '/dashboard']
+// const protectedRoutes = []
 const protectedRoutes = ['/quiz', '/completed', '/create', '/logout']
 
 export default async function middleware(req: NextRequest) {

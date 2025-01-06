@@ -116,5 +116,22 @@ class QuizControllers {
             }
         });
     }
+    getHistoryByUserID(req, res, next) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const quizzes = yield services_1.default.getHistory(req);
+                res.status(200).send({
+                    message: "Quizzes retrieved!",
+                    data: quizzes,
+                });
+            }
+            catch (err) {
+                next(err);
+                res.status(401).send({
+                    message: String(err),
+                });
+            }
+        });
+    }
 }
 exports.default = QuizControllers;

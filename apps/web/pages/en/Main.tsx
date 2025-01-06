@@ -8,6 +8,7 @@ const MAX_DISPLAY = 10
 
 export default function Home({ quizzes }: { quizzes: Quiz[] }) {
   try {
+    if (!quizzes) return null
     return (
       <>
         <div className="divide-y divide-gray-200 dark:divide-gray-700">

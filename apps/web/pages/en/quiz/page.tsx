@@ -28,10 +28,10 @@ export default function TakeQuizEn({ quiz, userID }: { quiz: Quiz; userID: numbe
 
       Swal.fire({
         icon: 'success',
-        title: `Score: ${output.data.data.score}`,
+        title: `Score: ${output.data.data.score}/${quiz.qCount}`,
       })
 
-      router.push('/')
+      router.push('/quiz')
       router.refresh()
     } catch (err) {
       setSubmitted(false)
@@ -79,10 +79,7 @@ export default function TakeQuizEn({ quiz, userID }: { quiz: Quiz; userID: numbe
                                             type={qna.multiple ? 'checkbox' : 'radio'}
                                             name={`qnas[${index}].answers`}
                                             onChange={(e) => {
-                                              setFieldValue(
-                                                `id`,
-                                                quiz ? quiz.id!.toString() : '0'
-                                              )
+                                              setFieldValue(`id`, quiz ? quiz.id!.toString() : '0')
                                               setFieldValue(`qnas[${index}].id`, qna.id?.toString())
                                               handleChange(e)
                                             }}

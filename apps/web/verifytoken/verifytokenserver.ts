@@ -28,8 +28,8 @@ export default async function VerifyTokenServer(): Promise<AccessTokenUser | nul
 
     return decodedToken
   } catch (err) {
-    console.log('something went wrong in verifytokenserver')
-    console.log('myerror: ' + err)
+    // console.log('something went wrong in verifytokenserver')
+    // console.log('myerror: ' + err)
     throw err
   }
 }

@@ -20,7 +20,12 @@ class Server {
     middlewares() {
         this.app.use((0, cors_1.default)({
             origin: true,
+            // origin: [
+            //   String(BASE_WEB_URL),
+            //   "https://quizzes-oujrvrvva-genesius-julian-muljadis-projects.vercel.app/",
+            // ],
             credentials: true,
+            methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
         }));
         this.app.use((0, helmet_1.default)());
         this.app.use(express_1.default.json());

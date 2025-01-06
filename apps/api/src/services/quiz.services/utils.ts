@@ -201,9 +201,20 @@ export default class QuizUtils {
     }
   }
 
-  static async findAllQuizzes() {
+  static async findAllQuizzes(userID: number | undefined) {
     try {
-      const findQuizzes = await prisma.quizzes.findMany({});
+      const findQuizzes = await prisma.quizzes.findMany({
+        where: {
+          userID: userID,
+        },
+        include: {
+          qnas: {
+            include: {
+              answers: true,
+            },
+          },
+        },
+      });
       if (!findQuizzes) throw new Error("Unable to find quizzes");
       if (findQuizzes.length < 1) throw new Error("No quizzes available");
 
@@ -262,17 +273,38 @@ export default class QuizUtils {
     }
   }
 
-  static async recordQuiz(userID: number, quizID: number, score: number) {
+  static async recordQuiz(
+    userID: number,
+    quizID: number,
+    score: number,
+    submission: Submit_Quiz
+  ) {
     try {
       const newRecord = await prisma.quiz_History.create({
         data: {
           userID: userID,
           quizID: quizID,
           score: score,
+          submission: JSON.stringify(submission),
         },
       });
 
       return newRecord;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async findHistory(userID: number) {
+    try {
+      const findQuizzes = await prisma.quiz_History.findMany({
+        where: {
+          userID: userID,
+        },
+      });
+      if (!findQuizzes) throw new Error("Unable to find quizzes");
+
+      return findQuizzes;
     } catch (err) {
       throw err;
     }

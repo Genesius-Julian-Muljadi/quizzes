@@ -119,12 +119,12 @@ export default function QuizList({
             </div>
           </div> */}
           <div className="w-full">
-            <ul>
+            <div>
               {displayPosts.map((post) => {
                 const { id, title, qCount, dateCreated } = post
                 return (
-                  <li key={id} className="border-b border-stone-800 py-5 dark:border-stone-200">
-                    <article className="flex flex-col space-y-2 xl:space-y-0">
+                  <div key={id} className="border-b border-stone-800 py-5 dark:border-stone-200">
+                    <div className="flex flex-col space-y-2 xl:space-y-0">
                       <dl>
                         <dt className="sr-only">Created on</dt>
                         <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
@@ -148,11 +148,11 @@ export default function QuizList({
                           {`${qCount} question${qCount === 1 ? '' : 's'}`}
                         </div>
                       </div>
-                    </article>
-                  </li>
+                    </div>
+                  </div>
                 )
               })}
-            </ul>
+            </div>
             {pagination && pagination.totalPages > 1 && (
               <Pagination currentPage={pagination.currentPage} totalPages={pagination.totalPages} />
             )}

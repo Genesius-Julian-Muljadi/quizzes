@@ -27,5 +27,6 @@ export interface History {
   userID: number
   quizID: number
   score: number
+  submission: string
   dateCreated?: Date
 }

@@ -72,7 +72,8 @@ export default class QuizServices {
 
   static async getAllQuizzes(req: Request) {
     try {
-      const quizzes = await QuizUtils.findAllQuizzes();
+      const userID = req.params.id ? req.params.id : undefined
+      const quizzes = await QuizUtils.findAllQuizzes(userID ? parseInt(userID) : undefined);
 
       return quizzes;
     } catch (err) {
@@ -96,10 +97,22 @@ export default class QuizServices {
       const newRecord: History = await QuizUtils.recordQuiz(
         parseInt(userID),
         parseInt(submittedQuiz.id),
-        correctQnAs
+        correctQnAs,
+        submittedQuiz,
       );
 
       return { score: correctQnAs, record: newRecord };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  static async getHistory(req: Request) {
+    try {
+      const userID = req.params.id
+      const quizzes = await QuizUtils.findHistory(parseInt(userID));
+
+      return quizzes;
     } catch (err) {
       throw err;
     }

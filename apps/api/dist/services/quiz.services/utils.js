@@ -220,10 +220,21 @@ class QuizUtils {
             }
         });
     }
-    static findAllQuizzes() {
+    static findAllQuizzes(userID) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const findQuizzes = yield prisma_1.default.quizzes.findMany({});
+                const findQuizzes = yield prisma_1.default.quizzes.findMany({
+                    where: {
+                        userID: userID,
+                    },
+                    include: {
+                        qnas: {
+                            include: {
+                                answers: true,
+                            },
+                        },
+                    },
+                });
                 if (!findQuizzes)
                     throw new Error("Unable to find quizzes");
                 if (findQuizzes.length < 1)
@@ -272,7 +283,7 @@ class QuizUtils {
             throw err;
         }
     }
-    static recordQuiz(userID, quizID, score) {
+    static recordQuiz(userID, quizID, score, submission) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const newRecord = yield prisma_1.default.quiz_History.create({
@@ -280,9 +291,27 @@ class QuizUtils {
                         userID: userID,
                         quizID: quizID,
                         score: score,
+                        submission: JSON.stringify(submission),
                     },
                 });
                 return newRecord;
+            }
+            catch (err) {
+                throw err;
+            }
+        });
+    }
+    static findHistory(userID) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const findQuizzes = yield prisma_1.default.quiz_History.findMany({
+                    where: {
+                        userID: userID,
+                    },
+                });
+                if (!findQuizzes)
+                    throw new Error("Unable to find quizzes");
+                return findQuizzes;
             }
             catch (err) {
                 throw err;

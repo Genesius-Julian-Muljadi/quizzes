@@ -20,9 +20,13 @@ class QuizRoutes {
         this.router.delete("/delete", this.controllers.removeQuiz);
         // Get quiz by quizID
         this.router.get("/getQuiz/:id", this.controllers.getQuizByQuizID);
+        // Get all quizzes by userID (if omitted, get all quizzes)
         this.router.get("/getAllQuizzes", this.controllers.getAllQuizzes);
+        this.router.get("/getAllQuizzes/:id", this.controllers.getAllQuizzes);
         // Submit quiz with quiz-taker's ID
         this.router.post("/submit/:id", this.controllers.submitQuiz);
+        // Get completed quizzes by userID
+        this.router.get("/getHistory/:id", this.controllers.getHistoryByUserID);
     }
     getRoutes() {
         return this.router;
