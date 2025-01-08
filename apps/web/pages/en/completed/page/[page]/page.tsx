@@ -65,7 +65,7 @@ export default function PaginatedCompletedQuizEn({
                               ? quiz.qnas.map((qna: QnA, qnaIndex) => (
                                   <div key={`qna-history-${postIndex}-${qnaIndex}`}>
                                     <QnAAccordion qNumber={qnaIndex + 1} qna={qna}>
-                                      <AnswerContainer qna={qna}>
+                                      <AnswerContainer>
                                         <div>
                                           {qna.answers.map((answer: Answer, answerIndex) => {
                                             return (

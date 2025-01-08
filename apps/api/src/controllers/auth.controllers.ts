@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import AuthServices from "../services/auth.services/services";
 
+const cookieDurationInMinutes = 40;
+
 export default class AuthControllers {
   public async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
@@ -27,7 +29,9 @@ export default class AuthControllers {
       res
         .status(200)
         .cookie("access_token", authToken, {
-          expires: new Date(new Date().valueOf() + 2400000),
+          expires: new Date(
+            new Date().valueOf() + cookieDurationInMinutes * 60000
+          ),
         })
         .send({
           message: "Login successful!",

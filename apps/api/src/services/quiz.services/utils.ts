@@ -28,7 +28,11 @@ export default class QuizUtils {
           id: qna.id ? qna.id : undefined,
           quizID: quizID,
           question: qna.question,
-          multiple: qna.multiple,
+          multiple: qna.multiple
+            ? qna.multiple
+            : qna.answers.filter((answer: Answer) => {
+                return answer.correct;
+              }).length > 1,
         },
       });
 
@@ -280,15 +284,19 @@ export default class QuizUtils {
     submission: Submit_Quiz
   ) {
     try {
-      const newRecord = await prisma.quiz_History.create({
-        data: {
-          userID: userID,
-          quizID: quizID,
-          score: score,
-          submission: JSON.stringify(submission),
-        },
+      let newRecord;
+      await prisma.$transaction(async (prisma) => {
+        newRecord = await prisma.quiz_History.create({
+          data: {
+            userID: userID,
+            quizID: quizID,
+            score: score,
+            submission: JSON.stringify(submission),
+          },
+        });
       });
 
+      if (!newRecord) throw new Error("Record quiz failed");
       return newRecord;
     } catch (err) {
       throw err;

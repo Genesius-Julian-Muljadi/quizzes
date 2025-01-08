@@ -63,7 +63,7 @@ export default function CompletedQuizEn({
                               ? quiz.qnas.map((qna: QnA, qnaIndex) => (
                                   <div key={`qna-history-${postIndex}-${qnaIndex}`}>
                                     <QnAAccordion qNumber={qnaIndex + 1} qna={qna}>
-                                      <AnswerContainer qna={qna}>
+                                      <AnswerContainer>
                                         {qna.answers.map((answer: Answer, answerIndex) => {
                                           function checkAnswer(): boolean {
                                             const answers = submission.qnas[qnaIndex].answers

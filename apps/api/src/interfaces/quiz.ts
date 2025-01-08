@@ -8,7 +8,7 @@ export interface QnA {
   id?: number;
   quizID?: number;
   question: string;
-  multiple: boolean;
+  multiple?: boolean;
   answers: Answer[];
 }
 

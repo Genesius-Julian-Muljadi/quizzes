@@ -67,7 +67,7 @@ export default function TakeQuizEn({ quiz, userID }: { quiz: Quiz; userID: numbe
                             <div key={`qna-${index}`}>
                               <Field type="hidden" name={`qnas[${index}].id`} value={qna.id} />
                               <QnAAccordion qNumber={index + 1} qna={qna}>
-                                <AnswerContainer qna={qna}>
+                                <AnswerContainer>
                                   {qna.answers.map((answer: Answer, idx) => (
                                     <div key={`answer-${idx}`}>
                                       <div className="flex items-center justify-normal pl-4 sm:pl-6">
