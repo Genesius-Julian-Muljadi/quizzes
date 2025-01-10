@@ -3,6 +3,8 @@ import { verify } from 'jsonwebtoken'
 import { jwtDecode } from 'jwt-decode'
 import { cookies } from 'next/headers'
 
+const COOKIE_EXPIRATION_MINUTES = 40
+
 export default async function VerifyTokenServer(): Promise<AccessTokenUser | null> {
   try {
     const cookieStore = await cookies()
@@ -26,7 +28,11 @@ export default async function VerifyTokenServer(): Promise<AccessTokenUser | nul
       }
     }
 
-    return decodedToken
+    const difference: number = decodedToken
+      ? new Date().valueOf() - new Date(decodedToken.iat * 1000).valueOf()
+      : -1
+    const expired: boolean = difference / (60 * 1000) > COOKIE_EXPIRATION_MINUTES
+    return expired ? null : decodedToken
   } catch (err) {
     // console.log('something went wrong in verifytokenserver')
     // console.log('myerror: ' + err)

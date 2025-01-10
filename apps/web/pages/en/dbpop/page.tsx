@@ -15,7 +15,7 @@ export default function DatabasePopulationPage() {
           Database Population
         </h1>
         <p className="text-lg leading-7 text-gray-500 dark:text-gray-400">
-          These buttons are used to populate the database with random data.
+          These buttons are used to populate the database with random data. Open console to see progress.
         </p>
       </div>
       <div className="flex flex-col gap-4 pb-8 pt-6 *:mx-auto">

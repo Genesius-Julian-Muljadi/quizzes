@@ -6,6 +6,7 @@ import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
 import headerNavLinksLoggedIn from '@/data/headerNavLinksLoggedIn'
+import LogoutButton from './LogoutButton'
 
 const MobileNav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [navShow, setNavShow] = useState(false)
@@ -83,6 +84,7 @@ const MobileNav = ({ loggedIn }: { loggedIn: boolean }) => {
                     {link.title}
                   </Link>
                 ))}
+                {loggedIn ? <LogoutButton mobile={true} /> : null}
               </nav>
 
               <button

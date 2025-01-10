@@ -47,7 +47,7 @@ const Header = async () => {
                   {link.title}
                 </Link>
               ))}
-            {token ? <LogoutButton /> : null}
+            {token ? <LogoutButton mobile={false} /> : null}
           </div>
           <SearchButton />
           <ThemeSwitch />
