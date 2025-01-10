@@ -14,17 +14,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 class QuizUtils {
-    static generateQuiz(client, quiz, userID) {
+    static generateQuiz(client, quiz, userID, dateCreated) {
         return __awaiter(this, void 0, void 0, function* () {
-            var _a;
             try {
                 const newQuiz = yield client.quizzes.create({
                     data: {
-                        id: quiz.id ? quiz.id : undefined,
                         userID: userID,
                         title: quiz.title,
-                        qCount: ((_a = quiz.qnas) === null || _a === void 0 ? void 0 : _a.length) || -1,
-                        dateCreated: quiz.dateCreated ? quiz.dateCreated : undefined,
+                        qCount: quiz.qnas.length,
+                        dateCreated: dateCreated || undefined,
                     },
                 });
                 return newQuiz;
@@ -39,10 +37,11 @@ class QuizUtils {
             try {
                 const newQnA = yield client.quiz_QnA.create({
                     data: {
-                        id: qna.id ? qna.id : undefined,
                         quizID: quizID,
                         question: qna.question,
-                        multiple: qna.multiple,
+                        multiple: qna.answers.filter((answer) => {
+                            return answer.correct;
+                        }).length > 1,
                     },
                 });
                 return newQnA;
@@ -57,10 +56,9 @@ class QuizUtils {
             try {
                 const newAnswer = yield client.quiz_Answers.create({
                     data: {
-                        id: answer.id ? answer.id : undefined,
                         qnaID: qnaID,
                         answer: answer.answer,
-                        correct: answer.correct,
+                        correct: answer.correct === "true",
                     },
                 });
                 return newAnswer;
@@ -70,10 +68,10 @@ class QuizUtils {
             }
         });
     }
-    static generateEntireQuiz(client, quiz, userID) {
+    static generateEntireQuiz(client, quiz, userID, dateCreated) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQuiz = yield this.generateQuiz(client, quiz, userID);
+                const newQuiz = yield this.generateQuiz(client, quiz, userID, dateCreated);
                 const qnas = quiz.qnas || [];
                 for (let i = 0; i < qnas.length; i++) {
                     const newQnA = yield this.generateQnA(client, qnas[i], newQuiz.id);
@@ -286,14 +284,19 @@ class QuizUtils {
     static recordQuiz(userID, quizID, score, submission) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newRecord = yield prisma_1.default.quiz_History.create({
-                    data: {
-                        userID: userID,
-                        quizID: quizID,
-                        score: score,
-                        submission: JSON.stringify(submission),
-                    },
-                });
+                let newRecord;
+                yield prisma_1.default.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
+                    newRecord = yield prisma.quiz_History.create({
+                        data: {
+                            userID: userID,
+                            quizID: quizID,
+                            score: score,
+                            submission: JSON.stringify(submission),
+                        },
+                    });
+                }));
+                if (!newRecord)
+                    throw new Error("Record quiz failed");
                 return newRecord;
             }
             catch (err) {

@@ -1,16 +1,17 @@
 import { Request } from "express";
 import prisma from "../../lib/prisma";
-import Quiz, { Answer, History, QnA } from "../../interfaces/quiz";
+import { History } from "../../interfaces/quiz";
 import QuizUtils from "./utils";
+import { Create_Quiz } from "../../interfaces/quiz_creation";
 import { Submit_Quiz } from "../../interfaces/quiz_submission";
 
 export default class QuizServices {
   static async createQuiz(req: Request) {
     try {
-      const quiz = req.body.quiz as Quiz;
+      const quiz = req.body.quiz as Create_Quiz;
       const userID = req.params.id;
 
-      let newQuiz: Quiz;
+      let newQuiz: Create_Quiz;
       await prisma.$transaction(async (prisma) => {
         newQuiz = await QuizUtils.generateEntireQuiz(
           prisma,
@@ -27,14 +28,13 @@ export default class QuizServices {
 
   static async editQuiz(req: Request) {
     try {
-      const newQuiz = req.body.quiz as Quiz; // Quiz should contain current quizID
-      const oldQuiz = await QuizUtils.validateFindQuizID(newQuiz.id);
-      newQuiz.dateCreated = oldQuiz.dateCreated;
-      newQuiz.userID = oldQuiz.userID;
+      const newQuiz = req.body.quiz as Create_Quiz; // Quiz should contain current quizID
+      const userID = req.params.id;
+      const oldQuiz = await QuizUtils.validateFindQuizID(parseInt(userID));
 
       await prisma.$transaction(async (prisma) => {
-        await QuizUtils.deleteQuiz(prisma, newQuiz.id!);
-        await QuizUtils.generateEntireQuiz(prisma, newQuiz, newQuiz.userID!);
+        await QuizUtils.deleteQuiz(prisma, parseInt(userID));
+        await QuizUtils.generateEntireQuiz(prisma, newQuiz, oldQuiz.userID!, oldQuiz.dateCreated);
       });
 
       return newQuiz;
@@ -72,8 +72,10 @@ export default class QuizServices {
 
   static async getAllQuizzes(req: Request) {
     try {
-      const userID = req.params.id ? req.params.id : undefined
-      const quizzes = await QuizUtils.findAllQuizzes(userID ? parseInt(userID) : undefined);
+      const userID = req.params.id ? req.params.id : undefined;
+      const quizzes = await QuizUtils.findAllQuizzes(
+        userID ? parseInt(userID) : undefined
+      );
 
       return quizzes;
     } catch (err) {
@@ -98,7 +100,7 @@ export default class QuizServices {
         parseInt(userID),
         parseInt(submittedQuiz.id),
         correctQnAs,
-        submittedQuiz,
+        submittedQuiz
       );
 
       return { score: correctQnAs, record: newRecord };
@@ -109,7 +111,7 @@ export default class QuizServices {
 
   static async getHistory(req: Request) {
     try {
-      const userID = req.params.id
+      const userID = req.params.id;
       const quizzes = await QuizUtils.findHistory(parseInt(userID));
 
       return quizzes;

@@ -5,11 +5,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const data_controllers_1 = __importDefault(require("../controllers/data.controllers"));
-const quiz_validation_1 = __importDefault(require("../middlewares/validations/quiz_validation"));
+const data_quiz_validation_1 = __importDefault(require("../middlewares/validations/data_quiz_validation"));
 class DataRoutes {
     constructor() {
         this.controllers = new data_controllers_1.default();
-        this.validations = new quiz_validation_1.default();
+        this.validations = new data_quiz_validation_1.default();
         this.router = (0, express_1.Router)();
         this.routes();
     }

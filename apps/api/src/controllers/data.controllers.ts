@@ -11,10 +11,10 @@ export default class DataControllers {
         data: newUser,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -27,10 +27,10 @@ export default class DataControllers {
         data: allUsers,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -43,10 +43,10 @@ export default class DataControllers {
         data: newQuiz,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -58,10 +58,10 @@ export default class DataControllers {
         message: "All data deleted",
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 }

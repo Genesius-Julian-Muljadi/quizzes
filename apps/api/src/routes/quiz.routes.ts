@@ -19,11 +19,13 @@ export default class QuizRoutes {
       this.validations.quizValidation,
       this.controllers.createQuiz
     );
+    // Edit quiz by userID
     this.router.post(
-      "/edit",
+      "/edit/:id",
       this.validations.quizValidation,
       this.controllers.editQuiz
     );
+    // Accepts quizID as body
     this.router.delete("/delete", this.controllers.removeQuiz);
     // Get quiz by quizID
     this.router.get("/getQuiz/:id", this.controllers.getQuizByQuizID);

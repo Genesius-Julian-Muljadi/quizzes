@@ -14,10 +14,10 @@ export default class AuthControllers {
         data: user,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -38,10 +38,10 @@ export default class AuthControllers {
           cookie: authToken,
         });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 }

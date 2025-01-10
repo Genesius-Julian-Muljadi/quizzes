@@ -5,8 +5,9 @@ import { disableBodyScroll, enableBodyScroll, clearAllBodyScrollLocks } from 'bo
 import { Fragment, useState, useEffect, useRef } from 'react'
 import Link from './Link'
 import headerNavLinks from '@/data/headerNavLinks'
+import headerNavLinksLoggedIn from '@/data/headerNavLinksLoggedIn'
 
-const MobileNav = () => {
+const MobileNav = ({ loggedIn }: { loggedIn: boolean }) => {
   const [navShow, setNavShow] = useState(false)
   const navRef = useRef(null)
 
@@ -72,7 +73,7 @@ const MobileNav = () => {
                 ref={navRef}
                 className="mt-8 flex h-full basis-0 flex-col items-start overflow-y-auto pl-12 pt-2 text-left"
               >
-                {headerNavLinks.map((link) => (
+                {(loggedIn ? headerNavLinksLoggedIn : headerNavLinks).map((link) => (
                   <Link
                     key={link.title}
                     href={link.href}

@@ -35,12 +35,11 @@ class QuizServices {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const newQuiz = req.body.quiz; // Quiz should contain current quizID
-                const oldQuiz = yield utils_1.default.validateFindQuizID(newQuiz.id);
-                newQuiz.dateCreated = oldQuiz.dateCreated;
-                newQuiz.userID = oldQuiz.userID;
+                const userID = req.params.id;
+                const oldQuiz = yield utils_1.default.validateFindQuizID(parseInt(userID));
                 yield prisma_1.default.$transaction((prisma) => __awaiter(this, void 0, void 0, function* () {
-                    yield utils_1.default.deleteQuiz(prisma, newQuiz.id);
-                    yield utils_1.default.generateEntireQuiz(prisma, newQuiz, newQuiz.userID);
+                    yield utils_1.default.deleteQuiz(prisma, parseInt(userID));
+                    yield utils_1.default.generateEntireQuiz(prisma, newQuiz, oldQuiz.userID, oldQuiz.dateCreated);
                 }));
                 return newQuiz;
             }

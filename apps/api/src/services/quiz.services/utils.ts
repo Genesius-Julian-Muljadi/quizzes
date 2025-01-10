@@ -1,17 +1,26 @@
 import Quiz, { Answer, QnA } from "../../interfaces/quiz";
+import {
+  Create_Answer,
+  Create_QnA,
+  Create_Quiz,
+} from "../../interfaces/quiz_creation";
 import { Submit_QnA, Submit_Quiz } from "../../interfaces/quiz_submission";
 import prisma from "../../lib/prisma";
 
 export default class QuizUtils {
-  static async generateQuiz(client: any, quiz: Quiz, userID: number) {
+  static async generateQuiz(
+    client: any,
+    quiz: Create_Quiz,
+    userID: number,
+    dateCreated?: Date
+  ) {
     try {
       const newQuiz = await client.quizzes.create({
         data: {
-          id: quiz.id ? quiz.id : undefined,
           userID: userID,
           title: quiz.title,
-          qCount: quiz.qnas?.length || -1,
-          dateCreated: quiz.dateCreated ? quiz.dateCreated : undefined,
+          qCount: quiz.qnas.length,
+          dateCreated: dateCreated || undefined,
         },
       });
 
@@ -21,18 +30,16 @@ export default class QuizUtils {
     }
   }
 
-  static async generateQnA(client: any, qna: QnA, quizID: number) {
+  static async generateQnA(client: any, qna: Create_QnA, quizID: number) {
     try {
       const newQnA = await client.quiz_QnA.create({
         data: {
-          id: qna.id ? qna.id : undefined,
           quizID: quizID,
           question: qna.question,
-          multiple: qna.multiple
-            ? qna.multiple
-            : qna.answers.filter((answer: Answer) => {
-                return answer.correct;
-              }).length > 1,
+          multiple:
+            qna.answers.filter((answer: Create_Answer) => {
+              return answer.correct;
+            }).length > 1,
         },
       });
 
@@ -42,14 +49,17 @@ export default class QuizUtils {
     }
   }
 
-  static async generateAnswer(client: any, answer: Answer, qnaID: number) {
+  static async generateAnswer(
+    client: any,
+    answer: Create_Answer,
+    qnaID: number
+  ) {
     try {
       const newAnswer = await client.quiz_Answers.create({
         data: {
-          id: answer.id ? answer.id : undefined,
           qnaID: qnaID,
           answer: answer.answer,
-          correct: answer.correct,
+          correct: answer.correct === "true",
         },
       });
 
@@ -59,11 +69,21 @@ export default class QuizUtils {
     }
   }
 
-  static async generateEntireQuiz(client: any, quiz: Quiz, userID: number) {
+  static async generateEntireQuiz(
+    client: any,
+    quiz: Create_Quiz,
+    userID: number,
+    dateCreated?: Date
+  ) {
     try {
-      const newQuiz = await this.generateQuiz(client, quiz, userID);
+      const newQuiz = await this.generateQuiz(
+        client,
+        quiz,
+        userID,
+        dateCreated
+      );
 
-      const qnas: QnA[] = quiz.qnas || [];
+      const qnas: Create_QnA[] = quiz.qnas || [];
       for (let i = 0; i < qnas.length; i++) {
         const newQnA: QnA = await this.generateQnA(
           client,
@@ -71,7 +91,7 @@ export default class QuizUtils {
           newQuiz.id!
         );
 
-        const answers: Answer[] = qnas[i].answers;
+        const answers: Create_Answer[] = qnas[i].answers;
         for (let j = 0; j < answers.length; j++) {
           await this.generateAnswer(client, answers[j], newQnA.id!);
         }

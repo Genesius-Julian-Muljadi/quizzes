@@ -26,6 +26,9 @@ class AuthValidations {
                     next();
                 }
                 catch (err) {
+                    res.status(401).send({
+                        message: String(err),
+                    });
                     next(err);
                 }
             },
@@ -52,6 +55,9 @@ class AuthValidations {
                     next();
                 }
                 catch (err) {
+                    res.status(401).send({
+                        message: String(err),
+                    });
                     next(err);
                 }
             },

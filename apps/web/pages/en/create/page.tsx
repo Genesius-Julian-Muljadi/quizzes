@@ -3,10 +3,7 @@
 import AnswerContainer from '@/components/quiz/AnswerContainer'
 import CreateQnAAccordion from '@/components/quiz/CreateQnAAccordion'
 import CreateQuizContainer from '@/components/quiz/CreateQuizContainer'
-import QnAAccordion from '@/components/quiz/QnAAccordion'
-import TakeQuizContainer from '@/components/quiz/TakeQuizContainer'
 import CreateQuizLayout from '@/layouts/quiz/CreateQuizLayout'
-import TakeQuizLayout from '@/layouts/quiz/TakeQuizLayout'
 import BasicSpinner from 'assets/BasicSpinner/BasicSpinner'
 import Check from 'assets/Check'
 import Trashcan from 'assets/Trashcan'
@@ -14,10 +11,8 @@ import X from 'assets/X'
 import axios from 'axios'
 import ErrorHandler from 'errorhandler/error-handler'
 import { ArrayHelpers, ErrorMessage, Field, FieldArray, Form, Formik, FormikProps } from 'formik'
-import { Answer, QnA, Quiz } from 'interfaces/database_tables'
 import { Create_Answer, Create_QnA, Create_Quiz } from 'interfaces/quiz_creation'
 import { CreateQuizSchema } from 'lib/validationSchemas/en/createQuizSchema'
-import { TakeQuizSchema } from 'lib/validationSchemas/en/takeQuizSchema'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
@@ -38,7 +33,7 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
         title: 'Quiz created!',
       })
 
-      router.push('/create')
+      router.push('/quiz')
       router.refresh()
     } catch (err) {
       setSubmitted(false)
@@ -56,7 +51,7 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
             answers: [
               {
                 answer: '',
-                correct: false,
+                correct: 'false',
               },
             ],
           },
@@ -66,11 +61,11 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
       onSubmit={(values) => {
         setSubmitted(true)
         console.log(values)
-        // postTakeQuiz(values)
+        postCreateQuiz(values)
       }}
     >
       {(props: FormikProps<Create_Quiz>) => {
-        const { values, errors, touched, handleChange, setFieldValue, submitCount } = props
+        const { values, errors, touched, handleChange, submitCount } = props
 
         return (
           <Form>
@@ -110,7 +105,7 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                                               disabled={submitted}
                                               placeholder={`Answer ${answerIndex + 1}`}
                                               aria-label={`Insert answer ${answerIndex + 1} text box`}
-                                              id={`create-qnas[${qnaIndex}].answer[${answerIndex}].answer`}
+                                              id={`create-qnas[${qnaIndex}].answers[${answerIndex}].answer`}
                                               className="mt-2 flex h-10 w-full items-center rounded bg-gray-100 px-2 focus:outline-1 focus:ring-zinc-600 dark:bg-gray-900 dark:text-white sm:h-12 sm:px-4"
                                             />
                                             <button
@@ -126,39 +121,62 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                                                     accordion.scrollHeight + 'px'
                                                 }, 5)
                                               }}
-                                              className="mt-2 text-3xl text-stone-800 dark:text-stone-200"
+                                              className="mt-2 grid cursor-pointer text-3xl text-stone-800 dark:text-stone-200"
                                             >
-                                              <div className="size-9 rounded border-2 border-[#86898d] px-[0.4rem] py-[0.32rem] text-slate-200">
+                                              <div className="my-auto size-9 rounded border-2 border-[#86898d] px-[0.4rem] py-[0.32rem] text-slate-200">
                                                 <Trashcan />
                                               </div>
                                             </button>
                                           </div>
+                                          <ErrorMessage
+                                            name={`qnas[${qnaIndex}].answers[${answerIndex}].answer`}
+                                          >
+                                            {(err) => (
+                                              <div
+                                                aria-label={`Error message: ${err}`}
+                                                className="flex w-full flex-col text-center text-sm text-red-600"
+                                              >
+                                                <span>{err}</span>
+                                              </div>
+                                            )}
+                                          </ErrorMessage>
                                           <div className="ml-4 flex flex-row gap-1">
                                             <div className="flex items-center justify-normal pl-4 sm:pl-6">
                                               <label
                                                 className="relative flex cursor-pointer items-center"
-                                                onMouseEnter={() => {
-                                                  console.log('Hi!')
-                                                }}
-                                                htmlFor={`create-qnas[${qnaIndex}].answer[${answerIndex}].correct-true`}
+                                                htmlFor={`create-qnas[${qnaIndex}].answers[${answerIndex}].correct-true`}
                                               >
                                                 <Field
                                                   type="radio"
-                                                  name={`qnas[${qnaIndex}].answer[${answerIndex}].correct`}
+                                                  name={`qnas[${qnaIndex}].answers[${answerIndex}].correct`}
                                                   onChange={(e) => {
-                                                    console.log(e.target.value)
                                                     handleChange(e)
                                                   }}
-                                                  value={true}
+                                                  value="true"
                                                   disabled={submitted}
                                                   aria-label="Set answer as correct"
-                                                  className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-stone-200 shadow-sm transition-all checked:border-stone-800 checked:bg-stone-800 hover:shadow"
-                                                  id={`create-qnas[${qnaIndex}].answer[${answerIndex}].correct-true`}
+                                                  className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-stone-200 shadow-sm transition-all checked:border-stone-800 checked:bg-stone-800 hover:shadow dark:checked:border-primary-500 dark:checked:bg-primary-500"
+                                                  id={`create-qnas[${qnaIndex}].answers[${answerIndex}].correct-true`}
                                                 />
+                                                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100">
+                                                  <svg
+                                                    className="h-3 w-3"
+                                                    viewBox="0 0 12 12"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <circle
+                                                      cx="6"
+                                                      cy="6"
+                                                      r="4"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </label>
                                               <label
                                                 className="ml-2 cursor-pointer"
-                                                htmlFor={`create-qnas[${qnaIndex}].answer[${answerIndex}].correct-true`}
+                                                htmlFor={`create-qnas[${qnaIndex}].answers[${answerIndex}].correct-true`}
                                               >
                                                 <div className="mt-[-0.25rem] size-6">
                                                   <Check />
@@ -168,25 +186,39 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                                             <div className="flex items-center justify-normal pl-4 sm:pl-6">
                                               <label
                                                 className="relative flex cursor-pointer items-center"
-                                                htmlFor={`create-qnas[${qnaIndex}].answer[${answerIndex}].correct-false`}
+                                                htmlFor={`create-qnas[${qnaIndex}].answers[${answerIndex}].correct-false`}
                                               >
                                                 <Field
                                                   type="radio"
-                                                  name={`qnas[${qnaIndex}].answer[${answerIndex}].correct`}
+                                                  name={`qnas[${qnaIndex}].answers[${answerIndex}].correct`}
                                                   onChange={(e) => {
-                                                    console.log(e.target.value)
                                                     handleChange(e)
                                                   }}
-                                                  value={false}
+                                                  value="false"
                                                   disabled={submitted}
                                                   aria-label="Set answer as incorrect"
-                                                  className="peer h-5 w-5 cursor-pointer appearance-none rounded border border-stone-200 shadow-sm transition-all checked:border-stone-800 checked:bg-stone-800 hover:shadow"
-                                                  id={`create-qnas[${qnaIndex}].answer[${answerIndex}].correct-false`}
+                                                  className="peer h-5 w-5 cursor-pointer appearance-none rounded-full border border-stone-200 shadow-sm transition-all checked:border-stone-800 checked:bg-stone-800 hover:shadow dark:checked:border-primary-500 dark:checked:bg-primary-500"
+                                                  id={`create-qnas[${qnaIndex}].answers[${answerIndex}].correct-false`}
                                                 />
+                                                <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-white opacity-0 peer-checked:opacity-100">
+                                                  <svg
+                                                    className="h-3 w-3"
+                                                    viewBox="0 0 12 12"
+                                                    fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                  >
+                                                    <circle
+                                                      cx="6"
+                                                      cy="6"
+                                                      r="4"
+                                                      fill="currentColor"
+                                                    />
+                                                  </svg>
+                                                </span>
                                               </label>
                                               <label
                                                 className="ml-3 cursor-pointer"
-                                                htmlFor={`create-qnas[${qnaIndex}].answer[${answerIndex}].correct-false`}
+                                                htmlFor={`create-qnas[${qnaIndex}].answers[${answerIndex}].correct-false`}
                                               >
                                                 <div className="mt-[-0.25rem] size-4">
                                                   <X />
@@ -202,7 +234,7 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                                       onClick={() => {
                                         answersArrayHelpers.push({
                                           answer: '',
-                                          correct: false,
+                                          correct: 'false',
                                         })
 
                                         setTimeout(() => {
@@ -213,10 +245,10 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                                         }, 5)
                                       }}
                                       aria-label="Add another answer"
-                                      className="mx-4 min-h-20 max-h-full rounded border border-slate-800 dark:border-slate-200 text-3xl text-stone-800 dark:text-stone-200"
+                                      className="mx-4 grid max-h-full min-h-20 cursor-pointer rounded border border-slate-800 text-3xl text-stone-800 dark:border-slate-200 dark:text-stone-200"
                                     >
-                                      <div className="flex">
-                                        <p className="mx-auto flex gap-2">
+                                      <div className="m-auto flex">
+                                        <p className="m-auto flex flex-row gap-2">
                                           +
                                           <span className="my-auto text-xl">
                                             Add another answer
@@ -239,15 +271,15 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                               answers: [
                                 {
                                   answer: '',
-                                  correct: false,
+                                  correct: 'false',
                                 },
                               ],
                             })
                           }
                           aria-label="Add another question"
-                          className="mt-8 h-20 w-full rounded border border-slate-800 dark:border-slate-200 text-3xl text-stone-800 dark:text-stone-200"
+                          className="mt-8 grid h-20 w-full cursor-pointer rounded border border-slate-800 text-3xl text-stone-800 dark:border-slate-200 dark:text-stone-200"
                         >
-                          <div className="flex">
+                          <div className="m-auto flex">
                             <p className="mx-auto flex gap-2">
                               +<span className="my-auto text-xl">Add another question</span>+
                             </p>
@@ -266,9 +298,9 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                           >
                             <BasicSpinner />
                           </div>
-                          {touched.qnas && errors.qnas && submitCount > 0 ? (
+                          {(errors.qnas || errors.title) && submitCount > 0 ? (
                             <div className="mt-2 flex flex-col text-center text-sm text-red-600">
-                              <span>{JSON.stringify(errors.qnas)}</span>
+                              <span>{'Your quiz has some errors'}</span>
                             </div>
                           ) : null}
                         </div>

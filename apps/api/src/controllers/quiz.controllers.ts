@@ -12,10 +12,10 @@ export default class QuizControllers {
         data: newQuiz,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -28,10 +28,10 @@ export default class QuizControllers {
         data: newQuiz,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -44,10 +44,10 @@ export default class QuizControllers {
         data: oldQuiz,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -64,10 +64,10 @@ export default class QuizControllers {
         data: quiz,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -80,10 +80,10 @@ export default class QuizControllers {
         data: quizzes,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -97,10 +97,10 @@ export default class QuizControllers {
         data: evaluate_recordQuiz,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 
@@ -113,10 +113,10 @@ export default class QuizControllers {
         data: quizzes,
       });
     } catch (err) {
-      next(err);
       res.status(401).send({
         message: String(err),
       });
+      next(err);
     }
   }
 }
