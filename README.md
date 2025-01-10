@@ -14,10 +14,10 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
 - Main page
 - Take a quiz
 - Quiz history
+- Create quiz
 
 ### In-Progress Features
 
-- Create quiz
 - Arabic language support
 
 ### Technologies
