@@ -5,6 +5,13 @@ import { cookies } from 'next/headers'
 
 const COOKIE_EXPIRATION_MINUTES = 40
 
+function checkExpiration(token: AccessTokenUser): boolean {
+  const difference: number = new Date().valueOf() - new Date(token.iat * 1000).valueOf()
+  const expired: boolean = difference / (60 * 1000) > COOKIE_EXPIRATION_MINUTES
+
+  return expired
+}
+
 export default async function VerifyTokenServer(): Promise<AccessTokenUser | null> {
   try {
     const cookieStore = await cookies()
@@ -28,11 +35,7 @@ export default async function VerifyTokenServer(): Promise<AccessTokenUser | nul
       }
     }
 
-    const difference: number = decodedToken
-      ? new Date().valueOf() - new Date(decodedToken.iat * 1000).valueOf()
-      : -1
-    const expired: boolean = difference / (60 * 1000) > COOKIE_EXPIRATION_MINUTES
-    return expired ? null : decodedToken
+    return decodedToken && checkExpiration(decodedToken) ? decodedToken : null
   } catch (err) {
     // console.log('something went wrong in verifytokenserver')
     // console.log('myerror: ' + err)
