@@ -66,6 +66,7 @@ export default function QuizList({
 }: ListLayoutProps) {
   const pathname = usePathname()
   if (!pathname) throw Error()
+  const basePath = pathname.split('/')[1]
 
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
 
@@ -116,25 +117,38 @@ export default function QuizList({
           <div className="w-full">
             <div>
               {displayPosts.map((post) => {
-                const { id, title, qCount, dateCreated } = post
+                const { id, title, qCount, dateCreated, updated } = post
                 return (
                   <div key={id} className="border-b border-stone-800 py-5 dark:border-stone-200">
-                    <div className="flex flex-col space-y-2 xl:space-y-0">
-                      <dl>
-                        <dt className="sr-only">Created on</dt>
-                        <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                          <time
-                            dateTime={new Date(dateCreated!).toISOString()}
-                            suppressHydrationWarning
-                          >
-                            {formatDate(new Date(dateCreated!).toISOString(), siteMetadata.locale)}
-                          </time>
-                        </dd>
-                      </dl>
+                    <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                      <div className="flex flex-col gap-2">
+                        <dl className="hidden sm:inline">
+                          <dt className="text-gray-500 dark:text-gray-400">Created on</dt>
+                          <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
+                            <time dateTime={new Date(dateCreated!).toISOString()}>
+                              {formatDate(
+                                new Date(dateCreated!).toISOString(),
+                                siteMetadata.locale
+                              )}
+                            </time>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt className="text-gray-500 dark:text-gray-400">Last updated on</dt>
+                          <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
+                            <time dateTime={new Date(updated!).toISOString()}>
+                              {formatDate(new Date(updated!).toISOString(), siteMetadata.locale)}
+                            </time>
+                          </dd>
+                        </dl>
+                      </div>
                       <div className="space-y-3">
                         <div>
                           <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                            <Link href={`/quiz/${id}`} className="text-gray-900 dark:text-gray-100">
+                            <Link
+                              href={`/${basePath}/${id}`}
+                              className="text-gray-900 dark:text-gray-100"
+                            >
                               {title}
                             </Link>
                           </h2>
@@ -143,6 +157,7 @@ export default function QuizList({
                           {`${qCount} question${qCount === 1 ? '' : 's'}`}
                         </div>
                       </div>
+
                     </div>
                   </div>
                 )

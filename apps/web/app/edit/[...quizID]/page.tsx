@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Quiz } from 'interfaces/database_tables'
 import VerifyTokenServer from 'verifytoken/verifytokenserver'
 import SomethingWentWrong from '@/components/SomethingWentWrong'
-import TakeQuizEn from 'pages/en/quiz/page'
+import EditQuizEn from 'pages/en/edit/page'
 
 export default async function Page(props: { params: Promise<{ quizID: string[] }> }) {
   try {
@@ -17,7 +17,9 @@ export default async function Page(props: { params: Promise<{ quizID: string[] }
     const quizRaw = await axios.get(process.env.NEXT_PUBLIC_BASE_API_URL + '/quiz/getQuiz/' + id)
     const quiz: Quiz = quizRaw.data.data
 
-    return <TakeQuizEn quiz={quiz} userID={token.id} />
+    if (token.id !== quiz.userID) throw new Error('You are not authorized to edit this quiz.')
+
+    return <EditQuizEn quiz={quiz} />
   } catch (err) {
     return <SomethingWentWrong err={err} />
   }

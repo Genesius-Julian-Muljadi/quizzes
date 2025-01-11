@@ -12,11 +12,13 @@ export default class QuizUtils {
     client: any,
     quiz: Create_Quiz,
     userID: number,
+    quizID?: number,
     dateCreated?: Date
   ) {
     try {
       const newQuiz = await client.quizzes.create({
         data: {
+          id: quizID || undefined,
           userID: userID,
           title: quiz.title,
           qCount: quiz.qnas.length,
@@ -73,6 +75,7 @@ export default class QuizUtils {
     client: any,
     quiz: Create_Quiz,
     userID: number,
+    quizID?: number,
     dateCreated?: Date
   ) {
     try {
@@ -80,6 +83,7 @@ export default class QuizUtils {
         client,
         quiz,
         userID,
+        quizID,
         dateCreated
       );
 

@@ -12,8 +12,11 @@ export default async function Page() {
   try {
     const quizzesRaw = await axios.get(process.env.NEXT_PUBLIC_BASE_API_URL + '/quiz/getAllQuizzes')
     const quizzes: Quiz[] = quizzesRaw.data.data
+    const quizzesSorted: Quiz[] = quizzes.sort(
+      (quizA, quizB) => new Date(quizB.updated!).valueOf() - new Date(quizA.updated!).valueOf()
+    )
 
-    return <MainEn quizzes={quizzes} />
+    return <MainEn quizzes={quizzesSorted} />
   } catch (err) {
     return <SomethingWentWrong err={err} />
   }

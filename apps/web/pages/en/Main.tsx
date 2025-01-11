@@ -28,14 +28,27 @@ export default function Home({ quizzes }: { quizzes: Quiz[] }) {
                 <li key={id} className="py-12">
                   <article>
                     <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                      <dl>
-                        <dt className="text-gray-500 dark:text-gray-400">Created on</dt>
-                        <dd className="text-base font-medium leading-6 text-gray-500 dark:text-gray-400">
-                          <time dateTime={new Date(dateCreated!).toISOString()}>
-                            {formatDate(new Date(dateCreated!).toISOString(), siteMetadata.locale)}
-                          </time>
-                        </dd>
-                      </dl>
+                      <div className="flex flex-col gap-2">
+                        <dl className="hidden sm:inline">
+                          <dt className="text-gray-500 dark:text-gray-400">Created on</dt>
+                          <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
+                            <time dateTime={new Date(dateCreated!).toISOString()}>
+                              {formatDate(
+                                new Date(dateCreated!).toISOString(),
+                                siteMetadata.locale
+                              )}
+                            </time>
+                          </dd>
+                        </dl>
+                        <dl>
+                          <dt className="text-gray-500 dark:text-gray-400">Last updated on</dt>
+                          <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
+                            <time dateTime={new Date(updated!).toISOString()}>
+                              {formatDate(new Date(updated!).toISOString(), siteMetadata.locale)}
+                            </time>
+                          </dd>
+                        </dl>
+                      </div>
                       <div className="space-y-5 xl:col-span-3">
                         <div className="space-y-6">
                           <div>

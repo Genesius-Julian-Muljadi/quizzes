@@ -19,7 +19,7 @@ export default class QuizRoutes {
       this.validations.quizValidation,
       this.controllers.createQuiz
     );
-    // Edit quiz by userID
+    // Edit quiz by quizID
     this.router.post(
       "/edit/:id",
       this.validations.quizValidation,

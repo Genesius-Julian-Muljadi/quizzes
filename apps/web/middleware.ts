@@ -27,5 +27,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/quiz/:path*', '/completed/:path*', '/create/:path*', '/logout/:path*'],
+  matcher: ['/completed/:path*', '/create/:path*', '/logout/:path*'],
 }

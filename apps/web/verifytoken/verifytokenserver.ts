@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 
 const COOKIE_EXPIRATION_MINUTES = 40
 
-function checkExpiration(token: AccessTokenUser): boolean {
+function checkExpired(token: AccessTokenUser): boolean {
   const difference: number = new Date().valueOf() - new Date(token.iat * 1000).valueOf()
   const expired: boolean = difference / (60 * 1000) > COOKIE_EXPIRATION_MINUTES
 
@@ -35,7 +35,7 @@ export default async function VerifyTokenServer(): Promise<AccessTokenUser | nul
       }
     }
 
-    return decodedToken && checkExpiration(decodedToken) ? decodedToken : null
+    return decodedToken && !checkExpired(decodedToken) ? decodedToken : null
   } catch (err) {
     // console.log('something went wrong in verifytokenserver')
     // console.log('myerror: ' + err)

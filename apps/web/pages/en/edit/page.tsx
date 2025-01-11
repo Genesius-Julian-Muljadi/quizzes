@@ -11,29 +11,51 @@ import X from 'assets/X'
 import axios from 'axios'
 import ErrorHandler from 'errorhandler/error-handler'
 import { ArrayHelpers, ErrorMessage, Field, FieldArray, Form, Formik, FormikProps } from 'formik'
+import { Quiz } from 'interfaces/database_tables'
 import { Create_Answer, Create_QnA, Create_Quiz } from 'interfaces/quiz_creation'
 import { CreateQuizSchema } from 'lib/validationSchemas/en/createQuizSchema'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Swal from 'sweetalert2'
 
-export default function CreateQuizEn({ userID }: { userID: number }) {
+export default function EditQuizEn({ quiz }: { quiz: Quiz }) {
   const [submitted, setSubmitted] = useState<boolean>(false)
   const router = useRouter()
 
-  const postCreateQuiz = async (params: Create_Quiz) => {
+  function convertQuiztoCreateQuiz(quiz: Quiz): Create_Quiz {
+    const output: Create_Quiz = { title: quiz.title, qnas: [] }
+
+    for (let i = 0; i < quiz.qnas.length; i++) {
+      const qna: Create_QnA = { question: quiz.qnas[i].question, answers: [] }
+
+      for (let j = 0; j < quiz.qnas[i].answers.length; j++) {
+        const answer: Create_Answer = {
+          answer: quiz.qnas[i].answers[j].answer,
+          correct: quiz.qnas[i].answers[j].correct ? 'true' : 'false',
+        }
+
+        qna.answers.push(answer)
+      }
+
+      output.qnas.push(qna)
+    }
+
+    return output
+  }
+
+  const postEditQuiz = async (params: Create_Quiz) => {
     try {
-      const API: string = process.env.NEXT_PUBLIC_BASE_API_URL + '/quiz/create/' + userID
+      const API: string = process.env.NEXT_PUBLIC_BASE_API_URL + '/quiz/edit/' + quiz.id
       const output = await axios.post(API, { quiz: params })
 
       if (!output) throw Error()
 
       Swal.fire({
         icon: 'success',
-        title: 'Quiz created!',
+        title: 'Quiz editted!',
       })
 
-      router.push('/quiz')
+      router.push('/edit')
       router.refresh()
     } catch (err) {
       setSubmitted(false)
@@ -43,29 +65,16 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
 
   return (
     <Formik
-      initialValues={{
-        title: '',
-        qnas: [
-          {
-            question: '',
-            answers: [
-              {
-                answer: '',
-                correct: 'false',
-              },
-            ],
-          },
-        ],
-      }}
+      initialValues={convertQuiztoCreateQuiz(quiz)}
       validationSchema={CreateQuizSchema}
       onSubmit={(values) => {
         setSubmitted(true)
         // console.log(values)
-        postCreateQuiz(values)
+        postEditQuiz(values)
       }}
     >
       {(props: FormikProps<Create_Quiz>) => {
-        const { values, errors, touched, handleChange, submitCount } = props
+        const { values, errors, handleChange, submitCount } = props
 
         return (
           <Form>
@@ -291,7 +300,7 @@ export default function CreateQuizEn({ userID }: { userID: number }) {
                             className="mx-auto flex h-12 items-center justify-center rounded bg-blue-600 px-6 text-sm font-semibold text-blue-100 shadow-sm shadow-slate-400 hover:bg-blue-700 sm:w-64"
                             aria-label="Submit quiz button"
                           >
-                            <span>Create quiz</span>
+                            <span>Submit edit</span>
                           </button>
                           <div
                             className={`${submitted ? '' : 'hidden '}absolute right-[15%] top-1/4 transform`}

@@ -29,12 +29,12 @@ export default class QuizServices {
   static async editQuiz(req: Request) {
     try {
       const newQuiz = req.body.quiz as Create_Quiz; // Quiz should contain current quizID
-      const userID = req.params.id;
-      const oldQuiz = await QuizUtils.validateFindQuizID(parseInt(userID));
+      const quizID = req.params.id;
+      const oldQuiz = await QuizUtils.validateFindQuizID(parseInt(quizID));
 
       await prisma.$transaction(async (prisma) => {
-        await QuizUtils.deleteQuiz(prisma, parseInt(userID));
-        await QuizUtils.generateEntireQuiz(prisma, newQuiz, oldQuiz.userID!, oldQuiz.dateCreated);
+        await QuizUtils.deleteQuiz(prisma, parseInt(quizID));
+        await QuizUtils.generateEntireQuiz(prisma, newQuiz, oldQuiz.userID!, oldQuiz.id, oldQuiz.dateCreated);
       });
 
       return newQuiz;
