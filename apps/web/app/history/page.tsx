@@ -1,7 +1,7 @@
 import { genPageMetadata } from 'app/seo'
 import axios from 'axios'
 import { History, Quiz } from 'interfaces/database_tables'
-import CompletedQuizEn from 'pages/en/completed/page'
+import CompletedQuizEn from 'pages/en/history/page'
 import VerifyTokenServer from 'verifytoken/verifytokenserver'
 
 const POSTS_PER_PAGE = 20

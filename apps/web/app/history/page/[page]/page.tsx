@@ -1,7 +1,7 @@
 import axios from 'axios'
 import VerifyTokenServer from 'verifytoken/verifytokenserver'
 import SomethingWentWrong from '@/components/SomethingWentWrong'
-import PaginatedCompletedQuizEn from 'pages/en/completed/page/[page]/page'
+import PaginatedCompletedQuizEn from 'pages/en/history/page/[page]/page'
 import { History, Quiz } from 'interfaces/database_tables'
 
 const POSTS_PER_PAGE = 20
