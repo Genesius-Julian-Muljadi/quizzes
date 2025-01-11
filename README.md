@@ -15,9 +15,11 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
 - Take a quiz
 - Quiz history
 - Create quiz
+- Edit quiz
 
 ### In-Progress Features
 
+- Delete quiz
 - Arabic language support
 
 ### Technologies
