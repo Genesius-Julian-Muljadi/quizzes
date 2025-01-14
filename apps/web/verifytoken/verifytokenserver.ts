@@ -8,6 +8,7 @@ const COOKIE_EXPIRATION_MINUTES = 40
 function checkExpired(token: AccessTokenUser): boolean {
   const difference: number = new Date().valueOf() - new Date(token.iat * 1000).valueOf()
   const expired: boolean = difference / (60 * 1000) > COOKIE_EXPIRATION_MINUTES
+  if (expired) console.log(difference / (60 * 1000) + ' minutes')
 
   return expired
 }
