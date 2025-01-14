@@ -309,16 +309,22 @@ export default class QuizUtils {
   ) {
     try {
       let newRecord;
-      await prisma.$transaction(async (prisma) => {
-        newRecord = await prisma.quiz_History.create({
-          data: {
-            userID: userID,
-            quizID: quizID,
-            score: score,
-            submission: JSON.stringify(submission),
-          },
-        });
-      });
+      await prisma.$transaction(
+        async (prisma) => {
+          newRecord = await prisma.quiz_History.create({
+            data: {
+              userID: userID,
+              quizID: quizID,
+              score: score,
+              submission: JSON.stringify(submission),
+            },
+          });
+        },
+        {
+          maxWait: 5000,
+          timeout: 900000,
+        }
+      );
 
       if (!newRecord) throw new Error("Record quiz failed");
       return newRecord;

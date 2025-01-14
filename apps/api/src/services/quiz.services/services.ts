@@ -12,13 +12,19 @@ export default class QuizServices {
       const userID = req.params.id;
 
       let newQuiz: Create_Quiz;
-      await prisma.$transaction(async (prisma) => {
-        newQuiz = await QuizUtils.generateEntireQuiz(
-          prisma,
-          quiz,
-          parseInt(userID)
-        );
-      });
+      await prisma.$transaction(
+        async (prisma) => {
+          newQuiz = await QuizUtils.generateEntireQuiz(
+            prisma,
+            quiz,
+            parseInt(userID)
+          );
+        },
+        {
+          maxWait: 5000,
+          timeout: 900000,
+        }
+      );
 
       return newQuiz!;
     } catch (err) {
@@ -28,14 +34,26 @@ export default class QuizServices {
 
   static async editQuiz(req: Request) {
     try {
-      const newQuiz = req.body.quiz as Create_Quiz; // Quiz should contain current quizID
+      const newQuiz = req.body.quiz as Create_Quiz;
       const quizID = req.params.id;
       const oldQuiz = await QuizUtils.validateFindQuizID(parseInt(quizID));
 
-      await prisma.$transaction(async (prisma) => {
-        await QuizUtils.deleteQuiz(prisma, parseInt(quizID));
-        await QuizUtils.generateEntireQuiz(prisma, newQuiz, oldQuiz.userID!, oldQuiz.id, oldQuiz.dateCreated);
-      });
+      await prisma.$transaction(
+        async (prisma) => {
+          await QuizUtils.deleteQuiz(prisma, parseInt(quizID));
+          await QuizUtils.generateEntireQuiz(
+            prisma,
+            newQuiz,
+            oldQuiz.userID!,
+            oldQuiz.id,
+            oldQuiz.dateCreated
+          );
+        },
+        {
+          maxWait: 5000,
+          timeout: 900000,
+        }
+      );
 
       return newQuiz;
     } catch (err) {
@@ -49,9 +67,15 @@ export default class QuizServices {
       await QuizUtils.validateFindQuizID(parseInt(oldQuizID));
 
       let oldQuiz;
-      await prisma.$transaction(async (prisma) => {
-        oldQuiz = await QuizUtils.deleteQuiz(prisma, parseInt(oldQuizID));
-      });
+      await prisma.$transaction(
+        async (prisma) => {
+          oldQuiz = await QuizUtils.deleteQuiz(prisma, parseInt(oldQuizID));
+        },
+        {
+          maxWait: 5000,
+          timeout: 900000,
+        }
+      );
 
       return oldQuiz;
     } catch (err) {

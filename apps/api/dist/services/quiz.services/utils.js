@@ -295,7 +295,10 @@ class QuizUtils {
                             submission: JSON.stringify(submission),
                         },
                     });
-                }));
+                }), {
+                    maxWait: 5000,
+                    timeout: 900000,
+                });
                 if (!newRecord)
                     throw new Error("Record quiz failed");
                 return newRecord;
