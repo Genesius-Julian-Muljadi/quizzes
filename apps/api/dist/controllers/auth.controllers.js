@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const services_1 = __importDefault(require("../services/auth.services/services"));
-const cookieDurationInMinutes = 40;
+const COOKIE_EXPIRATION_MINUTES = 40;
 class AuthControllers {
     registerUser(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -43,7 +43,7 @@ class AuthControllers {
                 res
                     .status(200)
                     .cookie("access_token", authToken, {
-                    expires: new Date(new Date().valueOf() + cookieDurationInMinutes * 60000),
+                    expires: new Date(new Date().valueOf() + COOKIE_EXPIRATION_MINUTES * 60000),
                 })
                     .send({
                     message: "Login successful!",

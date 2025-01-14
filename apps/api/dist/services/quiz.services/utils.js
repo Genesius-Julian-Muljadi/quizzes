@@ -14,11 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const prisma_1 = __importDefault(require("../../lib/prisma"));
 class QuizUtils {
-    static generateQuiz(client, quiz, userID, dateCreated) {
+    static generateQuiz(client, quiz, userID, quizID, dateCreated) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const newQuiz = yield client.quizzes.create({
                     data: {
+                        id: quizID || undefined,
                         userID: userID,
                         title: quiz.title,
                         qCount: quiz.qnas.length,
@@ -68,10 +69,10 @@ class QuizUtils {
             }
         });
     }
-    static generateEntireQuiz(client, quiz, userID, dateCreated) {
+    static generateEntireQuiz(client, quiz, userID, quizID, dateCreated) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const newQuiz = yield this.generateQuiz(client, quiz, userID, dateCreated);
+                const newQuiz = yield this.generateQuiz(client, quiz, userID, quizID, dateCreated);
                 const qnas = quiz.qnas || [];
                 for (let i = 0; i < qnas.length; i++) {
                     const newQnA = yield this.generateQnA(client, qnas[i], newQuiz.id);

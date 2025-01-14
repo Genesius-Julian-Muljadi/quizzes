@@ -16,7 +16,7 @@ class QuizRoutes {
     routes() {
         // Create quiz by userID
         this.router.post("/create/:id", this.validations.quizValidation, this.controllers.createQuiz);
-        // Edit quiz by userID
+        // Edit quiz by quizID
         this.router.post("/edit/:id", this.validations.quizValidation, this.controllers.editQuiz);
         // Accepts quizID as body
         this.router.delete("/delete", this.controllers.removeQuiz);

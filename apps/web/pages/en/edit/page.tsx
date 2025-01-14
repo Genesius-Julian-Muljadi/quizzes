@@ -23,6 +23,13 @@ export default function EditQuizEn({ quiz }: { quiz: Quiz }) {
   const router = useRouter()
 
   function convertQuiztoCreateQuiz(quiz: Quiz): Create_Quiz {
+    if (!quiz) {
+      return {
+        title: '',
+        qnas: [],
+      }
+    }
+
     const output: Create_Quiz = { title: quiz.title, qnas: [] }
 
     for (let i = 0; i < quiz.qnas.length; i++) {

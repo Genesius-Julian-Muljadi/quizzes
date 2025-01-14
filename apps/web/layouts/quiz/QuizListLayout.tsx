@@ -157,7 +157,6 @@ export default function QuizList({
                           {`${qCount} question${qCount === 1 ? '' : 's'}`}
                         </div>
                       </div>
-
                     </div>
                   </div>
                 )
