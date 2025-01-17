@@ -57,6 +57,7 @@ export default async function Page(props: { params: Promise<{ page: string }> })
         initialDisplayPosts={initialDisplayPosts}
         pagination={pagination}
         title="Edit your Quizzes"
+        deleteOption={true}
       />
     )
   } catch (err) {

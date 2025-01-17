@@ -63,7 +63,7 @@ export default class QuizServices {
 
   static async removeQuiz(req: Request) {
     try {
-      const oldQuizID = req.body.id as string;
+      const oldQuizID = req.params.id as string;
       await QuizUtils.validateFindQuizID(parseInt(oldQuizID));
 
       let oldQuiz;

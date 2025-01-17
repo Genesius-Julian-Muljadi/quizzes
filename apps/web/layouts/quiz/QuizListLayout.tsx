@@ -1,10 +1,14 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { formatDate } from 'pliny/utils/formatDate'
 import Link from '@/components/Link'
 import siteMetadata from '@/data/siteMetadata'
 import { Quiz } from 'interfaces/database_tables'
+import Trashcan from 'assets/Trashcan'
+import axios from 'axios'
+import Swal from 'sweetalert2'
+import ErrorHandler from 'errorhandler/error-handler'
 
 interface PaginationProps {
   totalPages: number
@@ -15,6 +19,7 @@ interface ListLayoutProps {
   title: string
   initialDisplayPosts?: Quiz[]
   pagination?: PaginationProps
+  deleteOption?: boolean
 }
 
 function Pagination({ totalPages, currentPage }: PaginationProps) {
@@ -63,12 +68,33 @@ export default function QuizList({
   title,
   initialDisplayPosts = [],
   pagination,
+  deleteOption,
 }: ListLayoutProps) {
+  const router = useRouter()
   const pathname = usePathname()
   if (!pathname) throw Error()
   const basePath = pathname.split('/')[1]
 
   const displayPosts = initialDisplayPosts.length > 0 ? initialDisplayPosts : posts
+
+  const deleteQuiz = async (params: number) => {
+    try {
+      const API: string = process.env.NEXT_PUBLIC_BASE_API_URL + '/quiz/delete/' + params
+      const output = await axios.delete(API)
+
+      if (!output) throw Error()
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Quiz deleted!',
+      })
+
+      router.push('/edit')
+      router.refresh()
+    } catch (err) {
+      ErrorHandler(err)
+    }
+  }
 
   return (
     <>
@@ -120,43 +146,56 @@ export default function QuizList({
                 const { id, title, qCount, dateCreated, updated } = post
                 return (
                   <div key={id} className="border-b border-stone-800 py-5 dark:border-stone-200">
-                    <div className="space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
-                      <div className="flex flex-col gap-2">
-                        <dl className="hidden sm:inline">
-                          <dt className="text-gray-500 dark:text-gray-400">Created on</dt>
-                          <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
-                            <time dateTime={new Date(dateCreated!).toISOString()}>
-                              {formatDate(
-                                new Date(dateCreated!).toISOString(),
-                                siteMetadata.locale
-                              )}
-                            </time>
-                          </dd>
-                        </dl>
-                        <dl>
-                          <dt className="text-gray-500 dark:text-gray-400">Last updated on</dt>
-                          <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
-                            <time dateTime={new Date(updated!).toISOString()}>
-                              {formatDate(new Date(updated!).toISOString(), siteMetadata.locale)}
-                            </time>
-                          </dd>
-                        </dl>
-                      </div>
-                      <div className="space-y-3">
-                        <div>
-                          <h2 className="text-2xl font-bold leading-8 tracking-tight">
-                            <Link
-                              href={`/${basePath}/${id}`}
-                              className="text-gray-900 dark:text-gray-100"
-                            >
-                              {title}
-                            </Link>
-                          </h2>
+                    <div className={`${deleteOption ? 'flex flex-row justify-between' : ''}`}>
+                      <div className="w-full space-y-2 xl:grid xl:grid-cols-4 xl:items-baseline xl:space-y-0">
+                        <div className="flex flex-col gap-2">
+                          <dl className="hidden sm:inline">
+                            <dt className="text-gray-500 dark:text-gray-400">Created on</dt>
+                            <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
+                              <time dateTime={new Date(dateCreated!).toISOString()}>
+                                {formatDate(
+                                  new Date(dateCreated!).toISOString(),
+                                  siteMetadata.locale
+                                )}
+                              </time>
+                            </dd>
+                          </dl>
+                          <dl>
+                            <dt className="text-gray-500 dark:text-gray-400">Last updated on</dt>
+                            <dd className="text-base font-medium leading-6 text-gray-600 dark:text-gray-300">
+                              <time dateTime={new Date(updated!).toISOString()}>
+                                {formatDate(new Date(updated!).toISOString(), siteMetadata.locale)}
+                              </time>
+                            </dd>
+                          </dl>
                         </div>
-                        <div className="prose max-w-none text-gray-500 dark:text-gray-400">
-                          {`${qCount} question${qCount === 1 ? '' : 's'}`}
+                        <div className="space-y-3">
+                          <div>
+                            <h2 className="text-2xl font-bold leading-8 tracking-tight">
+                              <Link
+                                href={`/${basePath}/${id}`}
+                                className="text-gray-900 dark:text-gray-100"
+                              >
+                                {title}
+                              </Link>
+                            </h2>
+                          </div>
+                          <div className="prose max-w-none text-gray-500 dark:text-gray-400">
+                            {`${qCount} question${qCount === 1 ? '' : 's'}`}
+                          </div>
                         </div>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          deleteQuiz(id!)
+                        }}
+                        className={`${deleteOption ? '' : 'hidden '}mt-2 grid cursor-pointer text-3xl text-stone-800 dark:text-stone-200`}
+                      >
+                        <div className="my-auto size-9 rounded border-2 border-[#86898d] px-[0.4rem] py-[0.32rem] text-slate-200">
+                          <Trashcan />
+                        </div>
+                      </button>
                     </div>
                   </div>
                 )

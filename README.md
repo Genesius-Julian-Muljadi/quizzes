@@ -16,10 +16,10 @@ Project is active on [Vercel](https://quizzes-web.vercel.app/).
 - Quiz history
 - Create quiz
 - Edit quiz
+- Delete quiz
 
 ### In-Progress Features
 
-- Delete quiz
 - Arabic language support
 
 ### Technologies

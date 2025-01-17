@@ -37,6 +37,7 @@ export default async function QuizPage() {
         initialDisplayPosts={initialDisplayPosts}
         pagination={pagination}
         title="Edit your Quizzes"
+        deleteOption={true}
       />
     )
   } catch (err) {

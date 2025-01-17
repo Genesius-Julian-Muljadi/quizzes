@@ -4,7 +4,7 @@ import { cookies } from 'next/headers'
 import { NextURL } from 'next/dist/server/web/next-url'
 
 // const protectedRoutes = []
-const protectedRoutes = ['/quiz', '/completed', '/create', '/logout']
+const protectedRoutes = ['/quiz', '/completed', '/create', '/logout', '/edit']
 
 export default async function middleware(req: NextRequest) {
   try {
@@ -27,5 +27,5 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/completed/:path*', '/create/:path*', '/logout/:path*'],
+  matcher: ['/quiz/([0-9]+)', '/completed/:path*', '/create/:path*', '/logout/:path*', '/edit/:path*'],
 }

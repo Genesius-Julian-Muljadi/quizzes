@@ -25,8 +25,8 @@ export default class QuizRoutes {
       this.validations.quizValidation,
       this.controllers.editQuiz
     );
-    // Accepts quizID as body
-    this.router.delete("/delete", this.controllers.removeQuiz);
+    // Delete quiz by quizID
+    this.router.delete("/delete/:id", this.controllers.removeQuiz);
     // Get quiz by quizID
     this.router.get("/getQuiz/:id", this.controllers.getQuizByQuizID);
     // Get all quizzes by userID (if omitted, get all quizzes)
