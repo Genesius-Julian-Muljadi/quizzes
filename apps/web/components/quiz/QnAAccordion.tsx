@@ -49,7 +49,7 @@ export default function QnAAccordion({
           className="flex w-full items-center justify-between py-5 text-slate-800 dark:text-slate-200"
         >
           <div className="flex flex-col gap-0">
-            <span className="font-bold">{`${qNumber}. ${qna.question}`}</span>
+            <span className="text-left font-bold">{`${qNumber}. ${qna.question}`}</span>
             <span
               className={`${qna.multiple ? '' : 'hidden '}font-light pl-4 text-left text-sm italic`}
             >
